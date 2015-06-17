@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/location_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:text="location: " />
+    
+    <EditText
+        android:id="@+id/edit_location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="up a tree" />
+    
+    <TextView 
+        android:id="@+id/server_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:text="Server to connect to" />
+    
+    <EditText
+        android:id="@+id/edit_server"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="server ip" />
+
+    <Button
+        android:id="@+id/save_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="saveSettings"
+        android:text="Save" />
+
+        <requestFocus />
+
+</LinearLayout>

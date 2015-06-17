@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Name:"
+        android:textSize="20sp" />
+	
+    <EditText
+        android:id="@+id/edit_rule_name"
+        android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+        android:hint="rule name" />
+    
+    <TextView
+        android:id="@+id/start_time"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Start Time"
+        android:textSize="20sp"  />
+
+    <TimePicker
+        android:id="@+id/timePicker1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    
+    <TextView
+        android:id="@+id/length"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Length (seconds)"
+        android:textSize="20sp" />
+	
+    <EditText
+        android:id="@+id/length_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number" >
+    </EditText>
+    
+    <Button
+        android:id="@+id/rule_save"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="saveRule"
+        android:text="Save"
+        tools:ignore="HardcodedText" />
+    
+    <Button
+        android:id="@+id/rule_cancle"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="cancelRule"
+        android:text="Cancel"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>
