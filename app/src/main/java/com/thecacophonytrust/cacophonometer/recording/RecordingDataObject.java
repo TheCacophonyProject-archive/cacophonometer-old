@@ -4,7 +4,7 @@ import java.io.File;
 
 import android.util.Log;
 
-import com.thecacophonytrust.cacophonometer.misc.Settings;
+import com.thecacophonytrust.cacophonometer.Settings;
 
 public class RecordingDataObject {
 

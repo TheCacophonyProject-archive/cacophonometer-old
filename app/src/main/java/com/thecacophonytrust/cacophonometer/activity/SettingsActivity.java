@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.misc.Settings;
+import com.thecacophonytrust.cacophonometer.Settings;
 
 public class SettingsActivity extends ActionBarActivity {
 

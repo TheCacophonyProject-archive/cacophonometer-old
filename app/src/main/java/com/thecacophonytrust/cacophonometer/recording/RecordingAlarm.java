@@ -11,8 +11,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.thecacophonytrust.cacophonometer.misc.Rule;
-import com.thecacophonytrust.cacophonometer.misc.RulesArray;
+import com.thecacophonytrust.cacophonometer.rules.Rule;
+import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 import com.thecacophonytrust.cacophonometer.activity.MainActivity;
 
 public class RecordingAlarm extends BroadcastReceiver {

@@ -19,10 +19,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
 import com.thecacophonytrust.cacophonometer.recording.RecordingUploadManager;
-import com.thecacophonytrust.cacophonometer.misc.Rule;
-import com.thecacophonytrust.cacophonometer.misc.RulesArray;
+import com.thecacophonytrust.cacophonometer.rules.Rule;
+import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 
 public class RulesMenuActivity extends ActionBarActivity {
 

@@ -10,8 +10,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.misc.Rule;
-import com.thecacophonytrust.cacophonometer.misc.RulesArray;
+import com.thecacophonytrust.cacophonometer.rules.Rule;
+import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 
 public class NewRuleActivity extends ActionBarActivity {
 

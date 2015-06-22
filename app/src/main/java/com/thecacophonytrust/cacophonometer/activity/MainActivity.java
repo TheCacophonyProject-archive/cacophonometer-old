@@ -11,14 +11,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thecacophonytrust.cacophonometer.misc.LoadData;
+import com.thecacophonytrust.cacophonometer.util.LoadData;
 import com.thecacophonytrust.cacophonometer.recording.PlayRecording;
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.recording.Recording;
 import com.thecacophonytrust.cacophonometer.recording.RecordingAlarm;
 import com.thecacophonytrust.cacophonometer.recording.RecordingUploadManager;
-import com.thecacophonytrust.cacophonometer.misc.Rule;
-import com.thecacophonytrust.cacophonometer.misc.RulesArray;
+import com.thecacophonytrust.cacophonometer.rules.Rule;
+import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 import com.thecacophonytrust.cacophonometer.recording.RecordingDataObject;
 
 public class MainActivity extends ActionBarActivity {

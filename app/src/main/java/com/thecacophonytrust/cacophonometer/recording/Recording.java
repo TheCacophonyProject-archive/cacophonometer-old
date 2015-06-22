@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.thecacophonytrust.cacophonometer.misc.Rule;
-import com.thecacophonytrust.cacophonometer.misc.Settings;
-import com.thecacophonytrust.cacophonometer.misc.TextFile;
+import com.thecacophonytrust.cacophonometer.rules.Rule;
+import com.thecacophonytrust.cacophonometer.Settings;
+import com.thecacophonytrust.cacophonometer.util.TextFile;
 
 import android.media.MediaRecorder;
 import android.util.Log;

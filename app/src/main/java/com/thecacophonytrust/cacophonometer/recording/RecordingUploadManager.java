@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.thecacophonytrust.cacophonometer.misc.Settings;
+import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.http.PostDataObject;
 
 import android.util.Log;

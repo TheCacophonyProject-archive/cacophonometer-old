@@ -2,11 +2,32 @@
 <items version="2" >
 
     <item
+        jar="/home/cameron/Work/Cacophonometer Git Repo/Cacophonometer/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/home/cameron/Work/Cacophonometer Git Repo/Cacophonometer/app/build/intermediates/pre-dexed/debug/classes-0b11edf44ef10ba3fd47f9e96d593d1c576eecc0.jar" />
+    </item>
+    <item
         jar="/home/cameron/AndroidStudioProjects/Cacophonometer/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
         <dex dex="/home/cameron/AndroidStudioProjects/Cacophonometer/app/build/intermediates/pre-dexed/debug/classes-a9113b189d72859506d99b8c62c054025c912174.jar" />
+    </item>
+    <item
+        jar="/home/cameron/Work/Cacophonometer Git Repo/Cacophonometer/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
+        <dex dex="/home/cameron/Work/Cacophonometer Git Repo/Cacophonometer/app/build/intermediates/pre-dexed/debug/classes-03ec89857b434815579875673ee62a4e307e69c5.jar" />
+    </item>
+    <item
+        jar="/home/cameron/AndroidSDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/home/cameron/AndroidStudioProjects/Cacophonometer/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-00d58e2a346367389267442545bbde7916b0e45d.jar" />
     </item>
     <item
         jar="/home/cameron/AndroidStudioProjects/Cacophonometer/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
@@ -16,11 +37,11 @@
         <dex dex="/home/cameron/AndroidStudioProjects/Cacophonometer/app/build/intermediates/pre-dexed/debug/classes-f6e845805f1a8208bd30296638cae052148c3e4a.jar" />
     </item>
     <item
-        jar="/home/cameron/AndroidSDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
+        jar="/home/cameron/Work/Cacophonometer Git Repo/Cacophonometer/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
-        <dex dex="/home/cameron/AndroidStudioProjects/Cacophonometer/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-00d58e2a346367389267442545bbde7916b0e45d.jar" />
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/home/cameron/Work/Cacophonometer Git Repo/Cacophonometer/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-52d46725a14eefe47f9542747a4f0acee169f515.jar" />
     </item>
     <item
         jar="/home/cameron/AndroidStudioProjects/Cacophonometer/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"

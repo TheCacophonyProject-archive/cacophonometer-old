@@ -21,8 +21,8 @@ import android.widget.TextView;
 import com.thecacophonytrust.cacophonometer.recording.PlayRecording;
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
-import com.thecacophonytrust.cacophonometer.misc.Rule;
-import com.thecacophonytrust.cacophonometer.misc.RulesArray;
+import com.thecacophonytrust.cacophonometer.rules.Rule;
+import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 
 public class ViewRuleActivity extends ActionBarActivity {
 
