@@ -20,7 +20,9 @@ public enum TextFileKeyType {
 	LONG,
 	ALT,
 	EXT_MIC,
-	UNRECOGNISED, RULE;
+	UNRECOGNISED,
+	RULE,
+	UTC_OF_GPS;
 	
 	private static final String LOG_TAG = "TextFileKeyType.java";
 	

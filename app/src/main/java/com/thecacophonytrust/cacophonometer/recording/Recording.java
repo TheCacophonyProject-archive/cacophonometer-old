@@ -50,6 +50,9 @@ public class Recording{
 		rdo.setDeviceId(deviceId);
 		rdo.setDuration(duration);
 		rdo.setUploaded(false);
+		rdo.setLatitude(Settings.getLatitude());
+		rdo.setLongitude(Settings.getLongitude());
+		rdo.setGPSLocationTime(Settings.getGPSLocationTime());
 		changeContainingFolder(rdo, Settings.getRecordingsToUploadFolder());
 		
 		//Moving recording to appropriate place
@@ -185,6 +188,9 @@ public class Recording{
 		valueMap.put(TextFileKeyType.DEVICE_ID, Long.toString(rdo.getDeviceId()));
 		valueMap.put(TextFileKeyType.DURATION, Integer.toString(rdo.getDuration()));
 		valueMap.put(TextFileKeyType.RULE, rdo.getRuleName());
+		valueMap.put(TextFileKeyType.LAT, Double.toString(rdo.getLatitude()));
+		valueMap.put(TextFileKeyType.LONG, Double.toString(rdo.getLongitude()));
+		valueMap.put(TextFileKeyType.UTC_OF_GPS, Long.toString(rdo.getGpsLocationTime()));
 		return TextFile.saveTextFile(valueMap, rdo.getContainingFolder(), rdo.getTextFileName());
 	}
 

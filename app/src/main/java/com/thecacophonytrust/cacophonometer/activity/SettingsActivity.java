@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.Settings;
+import com.thecacophonytrust.cacophonometer.util.GPS;
 
 public class SettingsActivity extends ActionBarActivity {
 
@@ -80,5 +81,15 @@ public class SettingsActivity extends ActionBarActivity {
 		EditText serverIPEditText = (EditText) findViewById(R.id.edit_server);
 		locationEditText.setText(Settings.getLocation());
 		serverIPEditText.setText(Settings.getServerUrl());
+	}
+
+	/**
+	 * Sends a request for a GPS location update.
+	 * @param view
+	 */
+	public void getGPSLocation(View view){
+		Log.v(LOG_TAG, "Get GPS Location button pressed in settings");
+		GPS gps = new GPS();
+		gps.update();
 	}
 }

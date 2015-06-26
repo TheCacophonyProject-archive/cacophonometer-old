@@ -18,8 +18,9 @@ public class RecordingDataObject {
 	private long utc;				//UTC time of start of recording.
 	private int duration;			//Duration is seconds of the recording.
 	private String timezone;		//Timezone at the place of recording.
-	private String lat;				//Latitude of device at time of recording.
-	private String longitude;		//Longitude of device at time of recording.
+	private double latitude;		//Latitude of device at time of recording.
+	private double longitude;		//Longitude of device at time of recording.
+	private long gpsLocationTime;	//Time when the GPS location was taken in UTC.
 	private String ruleName;		//Name of rule that started this recording.
 	private boolean uploaded;		//True if recording has been uploaded, false if not.
 	private File containingFolder;	//This is where the text file and should be found.
@@ -130,35 +131,51 @@ public class RecordingDataObject {
 	}
 
 	/**
-	 * Returns the Latitude of the device at the time of recording.
+	 * Returns the Latitude.
 	 * @return latitude
 	 */
-	public String getLat() {
-		return lat;
+	public double getLatitude() {
+		return latitude;
 	}
 
 	/**
-	 * Sets the Latitude of the device at the time of recording.
+	 * Sets the Latitude.
 	 * @param latitude
 	 */
-	public void setLat(String latitude) {
-		this.lat = latitude;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
 	/**
-	 * Returns the Longitude of the device at time of recording.
+	 * Returns the Longitude.
 	 * @return longitude
 	 */
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
 	/**
-	 * Sets the Longitude of the device at time of recording.
+	 * Sets the Longitude.
 	 * @param longitude
 	 */
-	public void setLongatude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	/**
+	 * Sets the UTC time that the GPS latitude and longitude associated with this recording were taken.
+	 * @param gpsLocationTime
+	 */
+	public void setGPSLocationTime(long gpsLocationTime){
+		this.gpsLocationTime = gpsLocationTime;
+	}
+
+	/**
+	 * Returns the UTC time tha the GPS latitude and longitude associated with this recording were taken.
+	 * @return a UTC time as a long
+	 */
+	public long getGpsLocationTime(){
+		return gpsLocationTime;
 	}
 
 	/**
@@ -235,7 +252,4 @@ public class RecordingDataObject {
 				+ ", ruleName=" + ruleName + ", uploaded=" + uploaded
 				+ ", duration=" + getDuration() + "]";
 	}
-
-
-
 }

@@ -15,5 +15,6 @@ public enum HttpPostFieldType {
 	PASSWORD,
 	OS_VERSION_NUMBER,
 	BUILD_MODEL,
-	EMAIL
+	EMAIL,
+	UTC_OF_GPS
 }

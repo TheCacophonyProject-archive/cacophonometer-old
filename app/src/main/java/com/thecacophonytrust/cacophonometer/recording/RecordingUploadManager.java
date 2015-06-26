@@ -77,6 +77,9 @@ public class RecordingUploadManager {
 
 		postFields.add(new PostField(HttpPostFieldType.DEVICE_ID, Long.toString(rdo.getDeviceId())));
 		postFields.add(new PostField(HttpPostFieldType.UTC, Long.toString(rdo.getUTC())));
+		postFields.add(new PostField(HttpPostFieldType.LAT, Double.toString(rdo.getLatitude())));
+		postFields.add(new PostField(HttpPostFieldType.LONG, Double.toString(rdo.getLongitude())));
+		postFields.add(new PostField(HttpPostFieldType.UTC_OF_GPS, Long.toString(rdo.getGpsLocationTime())));
 
 		return postFields;
 	}

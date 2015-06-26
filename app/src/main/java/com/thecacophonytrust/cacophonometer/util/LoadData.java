@@ -103,18 +103,35 @@ public class LoadData {
 			try {
 				rdo.setDuration(Integer.parseInt(value));
 			} catch (NumberFormatException e) {
-				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
-				Log.d(LOG_TAG, e.toString());
+
 			}
 			break;
 		case RULE:
 			rdo.setRuleName(value);
 			break;
 		case LAT:
-			// TODO
+			try {
+				rdo.setLatitude(Double.parseDouble(value));
+			} catch (NumberFormatException e){
+				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
+				Log.d(LOG_TAG, e.toString());
+			}
 			break;
 		case LONG:
-			// TODO
+			try {
+				rdo.setLatitude(Double.parseDouble(value));
+			} catch (NumberFormatException e){
+				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
+				Log.d(LOG_TAG, e.toString());
+			}
+			break;
+		case UTC_OF_GPS:
+			try {
+				rdo.setLatitude(Long.parseLong(value));
+			} catch (NumberFormatException e){
+				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
+				Log.d(LOG_TAG, e.toString());
+			}
 			break;
 		case ALT:
 			// TODO

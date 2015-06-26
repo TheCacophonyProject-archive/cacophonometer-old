@@ -34,12 +34,22 @@
         android:hint="server ip" />
 
     <Button
+        android:id="@+id/settings_get_gps_loccation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="getGPSLocation"
+        android:text="Get GPS location" />
+
+    <Button
         android:id="@+id/save_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="saveSettings"
         android:text="Save" />
 
-        <requestFocus />
+    <requestFocus />
+
+
+
 
 </LinearLayout>

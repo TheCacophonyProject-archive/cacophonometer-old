@@ -24,6 +24,9 @@ public class Settings {
 	private static File uploadedRecordingsFolder = null;
 	private static File rulesFolder = null;
 	private static long deviceId = 0;
+	private static double longitude = 0;
+	private static double latitude = 0;
+	private static long gpsLocationTime = 0;
 	
 	private static final String DEFAULT_URL = "http://192.168.0.11:3000";
 	private static final String DEFAULT_UPLOAD_PARAM = "/upload";
@@ -171,5 +174,49 @@ public class Settings {
 			Log.d(LOG_TAG, "Setting device id using TelephonyManagerId to: \"" +deviceId+ "\"");
 		}
 		return deviceId;
+	}
+
+	/**
+	 * Sets the longitude
+	 * @param longitude
+	 */
+	public static void setLongitude(double longitude){
+		Settings.longitude = longitude;
+	}
+
+	/**
+	 * Gets the longitude
+	 * @return longitude as a double
+	 */
+	public static double getLongitude(){
+		return longitude;
+	}
+
+	/**
+	 * Sets the latitude
+	 * @param latitude
+	 */
+	public static void setLatitude(double latitude){
+		Settings.latitude = latitude;
+	}
+
+	/**
+	 * Returns the latitude
+	 * @return latitude as a double
+	 */
+	public static double getLatitude(){
+		return latitude;
+	}
+
+	public static void setGPSLocationTime(long gpsUTC){
+		Settings.gpsLocationTime = gpsUTC;
+	}
+
+	/**
+	 * Returns the time that the GPS location was taken in UTC.
+	 * @return UTC time of GPS as a long
+	 */
+	public static long getGPSLocationTime(){
+		return gpsLocationTime;
 	}
 }
