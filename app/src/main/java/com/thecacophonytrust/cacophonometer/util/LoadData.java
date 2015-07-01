@@ -2,6 +2,8 @@ package com.thecacophonytrust.cacophonometer.util;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 import com.thecacophonytrust.cacophonometer.Settings;
@@ -21,6 +23,64 @@ public class LoadData {
 	 */
 	
 	private static final String LOG_TAG = "LoadData.java";
+
+	/**
+	 * Loads the data from the settings text file
+	 */
+	public static void loadSettings(){
+		File settingFile = Settings.getSettingsFile();
+		if (!settingFile.isFile()) {
+			Log.d(LOG_TAG, "Settings file was not found at: " + settingFile.getAbsolutePath());
+		} else {
+			Map<TextFileKeyType, String> map = TextFile.parseTextFile(settingFile);
+			parseValuePairForSettings(map);
+		}
+	}
+
+	private static void parseValuePairForSettings(Map<TextFileKeyType, String> dataMap){
+		for (TextFileKeyType key : dataMap.keySet()){
+			switch (key){
+				case SERVER_URL:
+					try{
+						URL url = new URL(dataMap.get(key));	//check if url is valid
+						Settings.setServerUrl(dataMap.get(key));
+					} catch (MalformedURLException e){
+						Log.e(LOG_TAG, "Error with getting URL from settings text file");
+						Log.e(LOG_TAG, e.toString());
+					}
+					break;
+				case LAT:
+					try{
+						Settings.setLatitude(Double.valueOf(dataMap.get(key)));
+					} catch (NumberFormatException e){
+						Log.e(LOG_TAG, "Error with getting latitude from settings text file");
+						Log.e(LOG_TAG, e.toString());
+					}
+					break;
+				case LONG:
+					try{
+						Settings.setLongitude(Double.valueOf(dataMap.get(key)));
+					} catch (NumberFormatException e){
+						Log.e(LOG_TAG, "Error with getting longitude from settings text file");
+						Log.e(LOG_TAG, e.toString());
+					}
+
+					break;
+				case UTC_OF_GPS:
+					try {
+						Settings.setLongitude(Double.valueOf(dataMap.get(key)));
+					} catch (NumberFormatException e){
+						Log.e(LOG_TAG, "Error with getting UTC_OF_GPS from settings text file");
+						Log.e(LOG_TAG, e.toString());
+					}
+					break;
+				default:
+					//TODO add other cases...
+					break;
+			}
+		}
+	}
+
 
 	/**
 	 * Goes through the recordings to upload folder and finds the .txt and .3gp files of recordings 

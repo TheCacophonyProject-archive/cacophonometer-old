@@ -1,11 +1,16 @@
 package com.thecacophonytrust.cacophonometer;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.activity.MainActivity;
+import com.thecacophonytrust.cacophonometer.enums.TextFileKeyType;
+import com.thecacophonytrust.cacophonometer.util.TextFile;
 
 public class Settings {
 
@@ -22,6 +27,7 @@ public class Settings {
 	private static File tempFile = null;
 	private static File recordingsToUploadFolder = null;
 	private static File uploadedRecordingsFolder = null;
+	private static File settingsFile = null;
 	private static File rulesFolder = null;
 	private static long deviceId = 0;
 	private static double longitude = 0;
@@ -34,6 +40,14 @@ public class Settings {
 	private static final String DEFAULT_RULES_FOLDER = "rules";
 	private static final String DEFAULT_RECORDINGS_TO_UPLOAD_FOLDER = "recordingToUpload";
 	private static final String DEFAULT_UPLOADED_RECORDINGS_FOLDER = "uploadedRecordings";
+	private static final String DEFAULT_SETTINGS_TEXT_FILE = "settings.txt";
+
+	public static File getSettingsFile(){
+		if (settingsFile == null){
+			settingsFile = new File(getHomeFile(), DEFAULT_SETTINGS_TEXT_FILE);
+		}
+		return settingsFile;
+	}
 
 	public static void setServerUrl(String serverUrl) {
 		Settings.serverUrl = serverUrl;
@@ -218,5 +232,16 @@ public class Settings {
 	 */
 	public static long getGPSLocationTime(){
 		return gpsLocationTime;
+	}
+
+	public static boolean saveToFile(){
+		Map<TextFileKeyType, String> valueMap = new HashMap<>();
+		valueMap.put(TextFileKeyType.SERVER_URL, getServerUrl());
+		valueMap.put(TextFileKeyType.LONG, Double.toString(getLongitude()));
+		valueMap.put(TextFileKeyType.LAT, Double.toString(getLatitude()));
+		valueMap.put(TextFileKeyType.UTC_OF_GPS, Long.toString(getGPSLocationTime()));
+
+		Toast.makeText(MainActivity.getCurrent().getBaseContext(), "Settings saved", Toast.LENGTH_SHORT).show();
+		return TextFile.saveTextFile(valueMap, getSettingsFile().getParentFile(), getSettingsFile().getName());
 	}
 }

@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "MainActivity created.");
         mainActivity = this;    //Saving this activity statically so can be accessed outside by other classes
+        LoadData.loadSettings();
         LoadData.loadRules();   //Loads the rules found in the set rules folder
         LoadData.loadRecordingsToUpload();
         LoadData.loadUploadedRecordings();

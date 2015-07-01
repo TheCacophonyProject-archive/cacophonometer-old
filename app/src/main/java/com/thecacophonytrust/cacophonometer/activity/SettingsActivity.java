@@ -65,6 +65,7 @@ public class SettingsActivity extends ActionBarActivity {
 				Log.d(LOG_TAG, "Server URL is not valid '"+serverString+"'");
 			}
 		}
+		Settings.saveToFile();
 	}
 
 	@Override

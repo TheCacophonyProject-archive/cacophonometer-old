@@ -4,25 +4,26 @@ import android.util.Log;
 
 public enum TextFileKeyType {
 	NAME,
-	START_TIME_MINUTE,
-	START_TIME_HOUR,
+	START_TIME_MINUTE,	//The minute that the recording starts
+	START_TIME_HOUR,	//The hour that the recording starts
 	DURATION,
 	PRIORITY,
 	REPEAT,
 	REPEAT_INTERVAL,
-	DEVICE_ID, 
+	DEVICE_ID, 			//The device ID
 	OS_VERSION_NUMBER,
 	BUILD_MODEL,
 	USER_ID,
-	UTC_TIME,
+	UTC_TIME,			//UTC time of when the recording was taken
 	TIMEZONE,
-	LAT,
-	LONG,
-	ALT,
-	EXT_MIC,
-	UNRECOGNISED,
-	RULE,
-	UTC_OF_GPS;
+	LAT,				//Latitude
+	LONG,				//Longitude
+	ALT,				//Altitude
+	EXT_MIC,			//External mic
+	UNRECOGNISED,		//value is unrecognised
+	RULE,				//Name of the rule
+	UTC_OF_GPS,			//UTC of the time that the GPS location was taken
+	SERVER_URL;			//URL of the server
 	
 	private static final String LOG_TAG = "TextFileKeyType.java";
 	
