@@ -134,6 +134,7 @@ public class RecordingUploadManager {
 			rdoMap.remove(rdo);
 			RecordingArray.addUploadedRecording(rdo);
 			RecordingArray.removeUploadingRecording(rdo);
+			Log.i(LOG_TAG, "Recording ("+rdo.toString()+") was uploaded");	//TODO make a shorter toString option for the RDO.
 			rdo.setUploaded(true);
 			Recording.updateFileLocation(rdo);
 		}
