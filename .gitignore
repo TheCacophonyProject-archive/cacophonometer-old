@@ -5,4 +5,4 @@
 /build
 *.iml
 *.apk
-
+app/src/main/.idea/
