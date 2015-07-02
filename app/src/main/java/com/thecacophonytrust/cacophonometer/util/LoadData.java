@@ -68,7 +68,7 @@ public class LoadData {
 					break;
 				case UTC_OF_GPS:
 					try {
-						Settings.setLongitude(Double.valueOf(dataMap.get(key)));
+						Settings.setGPSLocationTime(Long.valueOf(dataMap.get(key)));
 					} catch (NumberFormatException e){
 						Log.e(LOG_TAG, "Error with getting UTC_OF_GPS from settings text file");
 						Log.e(LOG_TAG, e.toString());
