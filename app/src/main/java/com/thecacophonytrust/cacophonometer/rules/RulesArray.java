@@ -100,4 +100,11 @@ public class RulesArray {
 		} else
 			return r;
 	}
+
+	/**
+	 * Sets the rule HashMap to a new empty one.
+	 */
+	public static void clear(){
+		ruleMap = new HashMap<>();
+	}
 }

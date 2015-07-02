@@ -101,4 +101,13 @@ public class RecordingArray {
 	public static void removeUploadingRecording(RecordingDataObject rdo){
 		uploadingRecordings.remove(rdo);
 	}
+
+	/**
+	 * Sets the recording arrays to new empty ones.
+	 */
+	public static void clear(){
+		recordingsToUpload = new ArrayList<>();
+		uploadedRecordings = new ArrayList<>();
+		uploadingRecordings = new ArrayList<>();
+	}
 }

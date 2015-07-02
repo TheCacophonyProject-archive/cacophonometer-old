@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
 import com.thecacophonytrust.cacophonometer.util.LoadData;
 import com.thecacophonytrust.cacophonometer.recording.PlayRecording;
 import com.thecacophonytrust.cacophonometer.R;
@@ -36,6 +37,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "MainActivity created.");
         mainActivity = this;    //Saving this activity statically so can be accessed outside by other classes
+        RulesArray.clear();
+        RecordingArray.clear();
         LoadData.loadSettings();
         LoadData.loadRules();   //Loads the rules found in the set rules folder
         LoadData.loadRecordingsToUpload();
