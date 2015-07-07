@@ -49,17 +49,17 @@ public class LoadData {
 						Log.e(LOG_TAG, e.toString());
 					}
 					break;
-				case LAT:
+				case LATITUDE:
 					try{
-						Settings.setLatitude(Double.valueOf(dataMap.get(key)));
+						Settings.getLocation().setLatitude(Double.valueOf(dataMap.get(key)));
 					} catch (NumberFormatException e){
 						Log.e(LOG_TAG, "Error with getting latitude from settings text file");
 						Log.e(LOG_TAG, e.toString());
 					}
 					break;
-				case LONG:
+				case LONGITUDE:
 					try{
-						Settings.setLongitude(Double.valueOf(dataMap.get(key)));
+						Settings.getLocation().setLongitude(Double.valueOf(dataMap.get(key)));
 					} catch (NumberFormatException e){
 						Log.e(LOG_TAG, "Error with getting longitude from settings text file");
 						Log.e(LOG_TAG, e.toString());
@@ -68,7 +68,7 @@ public class LoadData {
 					break;
 				case UTC_OF_GPS:
 					try {
-						Settings.setGPSLocationTime(Long.valueOf(dataMap.get(key)));
+						Settings.getLocation().setGPSLocationTime(Long.valueOf(dataMap.get(key)));
 					} catch (NumberFormatException e){
 						Log.e(LOG_TAG, "Error with getting UTC_OF_GPS from settings text file");
 						Log.e(LOG_TAG, e.toString());
@@ -144,6 +144,7 @@ public class LoadData {
 	 * @param rdo RecordingDataObject to save value to.
 	 */
 	private static void parseValuePairForRecording(TextFileKeyType key, String value, RecordingDataObject rdo) {
+		Log.v(LOG_TAG, "Parsing value pair, Key: "+key+", Value: "+value);
 		switch (key) {
 		case DEVICE_ID:
 			try {
@@ -169,9 +170,17 @@ public class LoadData {
 		case RULE:
 			rdo.setRuleName(value);
 			break;
-		case LAT:
+		case LATITUDE:
 			try {
-				rdo.setLatitude(Double.parseDouble(value));
+				rdo.getLocation().setLatitude(Double.parseDouble(value));
+			} catch (NumberFormatException e){
+				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
+				Log.d(LOG_TAG, e.toString());
+			}
+			break;
+		case LONGITUDE:
+			try {
+				rdo.getLocation().setLatitude(Double.parseDouble(value));
 			} catch (NumberFormatException e){
 				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
 				Log.d(LOG_TAG, e.toString());
@@ -179,7 +188,15 @@ public class LoadData {
 			break;
 		case LONG:
 			try {
-				rdo.setLatitude(Double.parseDouble(value));
+				rdo.getLocation().setLatitude(Double.parseDouble(value));
+			} catch (NumberFormatException e){
+				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
+				Log.d(LOG_TAG, e.toString());
+			}
+			break;
+		case LAT:
+			try {
+				rdo.getLocation().setLatitude(Double.parseDouble(value));
 			} catch (NumberFormatException e){
 				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
 				Log.d(LOG_TAG, e.toString());
@@ -187,7 +204,18 @@ public class LoadData {
 			break;
 		case UTC_OF_GPS:
 			try {
-				rdo.setLatitude(Long.parseLong(value));
+				rdo.getLocation().setLatitude(Long.parseLong(value));
+			} catch (NumberFormatException e){
+				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
+				Log.d(LOG_TAG, e.toString());
+			}
+			break;
+		case USER_LOCATION_INPUT:
+			rdo.getLocation().setUserLocationInput(value);
+			break;
+		case ALTITUDE:
+			try {
+				rdo.getLocation().setAltitude(Long.parseLong(value));
 			} catch (NumberFormatException e){
 				Log.d(LOG_TAG, "Failed to parse "+key+" value: '" + value + "'");
 				Log.d(LOG_TAG, e.toString());

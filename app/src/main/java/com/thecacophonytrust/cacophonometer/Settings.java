@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.activity.MainActivity;
 import com.thecacophonytrust.cacophonometer.enums.TextFileKeyType;
+import com.thecacophonytrust.cacophonometer.util.Location;
 import com.thecacophonytrust.cacophonometer.util.TextFile;
 
 public class Settings {
@@ -20,7 +21,7 @@ public class Settings {
 	private static final String LOG_TAG = "Settings.java";
 
 	private static String name = "Cacophonometer";
-	private static String location = null;
+	private static Location location = new Location();
 	private static String serverUrl = null;
 	private static String uploadParam = null;
 	private static File homeFile = null;
@@ -30,10 +31,7 @@ public class Settings {
 	private static File settingsFile = null;
 	private static File rulesFolder = null;
 	private static long deviceId = 0;
-	private static double longitude = 0;
-	private static double latitude = 0;
-	private static long gpsLocationTime = 0;
-	
+
 	private static final String DEFAULT_URL = "http://192.168.0.11:3000";
 	private static final String DEFAULT_UPLOAD_PARAM = "/upload";
 	private static final String DEFAULT_TEMP_FOLDER = "temp";
@@ -59,14 +57,6 @@ public class Settings {
 
 	public static void setName(String name) {
 		Settings.name = name;
-	}
-
-	public static String getLocation() {
-		return location;
-	}
-
-	public static void setLocation(String location) {
-		Settings.location = location;
 	}
 
     /**
@@ -190,56 +180,20 @@ public class Settings {
 		return deviceId;
 	}
 
-	/**
-	 * Sets the longitude
-	 * @param longitude
-	 */
-	public static void setLongitude(double longitude){
-		Settings.longitude = longitude;
-	}
-
-	/**
-	 * Gets the longitude
-	 * @return longitude as a double
-	 */
-	public static double getLongitude(){
-		return longitude;
-	}
-
-	/**
-	 * Sets the latitude
-	 * @param latitude
-	 */
-	public static void setLatitude(double latitude){
-		Settings.latitude = latitude;
-	}
-
-	/**
-	 * Returns the latitude
-	 * @return latitude as a double
-	 */
-	public static double getLatitude(){
-		return latitude;
-	}
-
-	public static void setGPSLocationTime(long gpsUTC){
-		Settings.gpsLocationTime = gpsUTC;
-	}
-
-	/**
-	 * Returns the time that the GPS location was taken in UTC.
-	 * @return UTC time of GPS as a long
-	 */
-	public static long getGPSLocationTime(){
-		return gpsLocationTime;
+	public static Location getLocation(){
+		return location;
 	}
 
 	public static boolean saveToFile(){
 		Map<TextFileKeyType, String> valueMap = new HashMap<>();
 		valueMap.put(TextFileKeyType.SERVER_URL, getServerUrl());
-		valueMap.put(TextFileKeyType.LONG, Double.toString(getLongitude()));
-		valueMap.put(TextFileKeyType.LAT, Double.toString(getLatitude()));
-		valueMap.put(TextFileKeyType.UTC_OF_GPS, Long.toString(getGPSLocationTime()));
+		valueMap.put(TextFileKeyType.LONGITUDE, Double.toString(getLocation().getLongitude()));
+		valueMap.put(TextFileKeyType.LATITUDE, Double.toString(getLocation().getLatitude()));
+		valueMap.put(TextFileKeyType.UTC_OF_GPS, Long.toString(getLocation().getGPSLocationTime()));
+		valueMap.put(TextFileKeyType.HAS_ALTITUDE, Boolean.toString(getLocation().hasAltitude()));
+		valueMap.put(TextFileKeyType.ALTITUDE, Double.toString(getLocation().getAltitude()));
+		valueMap.put(TextFileKeyType.LOCATION_ACCURACY, Float.toString(getLocation().getAccuracy()));
+		valueMap.put(TextFileKeyType.USER_LOCATION_INPUT, Settings.getLocation().getUserLocationInput());
 
 		Toast.makeText(MainActivity.getCurrent().getBaseContext(), "Settings saved", Toast.LENGTH_SHORT).show();
 		return TextFile.saveTextFile(valueMap, getSettingsFile().getParentFile(), getSettingsFile().getName());

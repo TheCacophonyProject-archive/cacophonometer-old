@@ -77,9 +77,13 @@ public class RecordingUploadManager {
 
 		postFields.add(new PostField(HttpPostFieldType.DEVICE_ID, Long.toString(rdo.getDeviceId())));
 		postFields.add(new PostField(HttpPostFieldType.UTC, Long.toString(rdo.getUTC())));
-		postFields.add(new PostField(HttpPostFieldType.LAT, Double.toString(rdo.getLatitude())));
-		postFields.add(new PostField(HttpPostFieldType.LONG, Double.toString(rdo.getLongitude())));
-		postFields.add(new PostField(HttpPostFieldType.UTC_OF_GPS, Long.toString(rdo.getGpsLocationTime())));
+		postFields.add(new PostField(HttpPostFieldType.LAT, Double.toString(rdo.getLocation().getLatitude())));
+		postFields.add(new PostField(HttpPostFieldType.LONG, Double.toString(rdo.getLocation().getLongitude())));
+		postFields.add(new PostField(HttpPostFieldType.UTC_OF_GPS, Long.toString(rdo.getLocation().getGPSLocationTime())));
+		postFields.add(new PostField(HttpPostFieldType.LOCATION_ACCURACY, Double.toString(rdo.getLocation().getAccuracy())));
+		postFields.add(new PostField(HttpPostFieldType.USER_LOCATION_INPUT, rdo.getLocation().getUserLocationInput()));
+		if (rdo.getLocation().hasAltitude())
+			postFields.add(new PostField(HttpPostFieldType.ALTITUDE, Double.toString(rdo.getLocation().getAltitude())));
 
 		return postFields;
 	}

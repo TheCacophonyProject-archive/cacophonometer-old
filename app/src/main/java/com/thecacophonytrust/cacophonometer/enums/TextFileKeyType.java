@@ -16,14 +16,21 @@ public enum TextFileKeyType {
 	USER_ID,
 	UTC_TIME,			//UTC time of when the recording was taken
 	TIMEZONE,
-	LAT,				//Latitude
-	LONG,				//Longitude
+	LATITUDE,				//Latitude
+	LONGITUDE,				//Longitude
+	LONG,
+	LAT,
 	ALT,				//Altitude
 	EXT_MIC,			//External mic
 	UNRECOGNISED,		//value is unrecognised
 	RULE,				//Name of the rule
 	UTC_OF_GPS,			//UTC of the time that the GPS location was taken
-	SERVER_URL;			//URL of the server
+	SERVER_URL,			//URL of the server
+	HAS_ALTITUDE,
+	HAS_LOCATION_ACCURACY,
+	LOCATION_ACCURACY,
+	ALTITUDE,
+	USER_LOCATION_INPUT;
 	
 	private static final String LOG_TAG = "TextFileKeyType.java";
 	

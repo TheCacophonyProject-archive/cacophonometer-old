@@ -11,32 +11,41 @@ import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.activity.MainActivity;
+import com.thecacophonytrust.cacophonometer.activity.SettingsActivity;
 
 public class GPS implements LocationListener {
 
     private static final String LOG_TAG = "GPSLocation.java";
 
     static LocationManager locationManager;
+    static SettingsActivity settingsActivity;
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){
         Log.d(LOG_TAG, "GPS status changed.");
     }
 
-    /**
-     * Gets the latitude and longitude from the location and saves it to settings. Also saves the time that is was gotten.
-     * @param location
-     */
     @Override
     public void onLocationChanged(Location location) {
         double lat = location.getLatitude();
         double lon = location.getLongitude();
+        double alt = location.getAltitude();
+        float acc = location.getAccuracy();
         String str = "Latitude: "+lat+" Longitude: "+lon;
         Toast.makeText(MainActivity.getCurrent().getApplicationContext(), str, Toast.LENGTH_LONG).show();
-        Settings.setLatitude(lat);
-        Settings.setLongitude(lon);
-        Settings.setGPSLocationTime(location.getTime());
+
+
+        Settings.getLocation().setLatitude(lat);
+        Settings.getLocation().setLongitude(lon);
+
+        Settings.getLocation().setAccuracy(acc);
+        Settings.getLocation().setGPSLocationTime(location.getTime());
+
+        if (location.hasAltitude())
+            Settings.getLocation().setAltitude(alt);
+
         Log.d(LOG_TAG, "GPS location changed to " + str);
+        if (settingsActivity != null) settingsActivity.updateLocationTextField();
     }
 
     @Override
@@ -50,9 +59,11 @@ public class GPS implements LocationListener {
     }
 
     /**
-     * Requests a GPS location update of a medium accuracy
+     * Requests a GPS location update of a high accuracy.
+     * @param settingsActivity settingsActivity that text is to be updated on completion of getting the location
      */
-    public void update() {
+    public void update(SettingsActivity settingsActivity) {
+        GPS.settingsActivity = settingsActivity;
         Log.d(LOG_TAG, "Starting GPS test");
         locationManager = (LocationManager) MainActivity.getCurrent().getSystemService(Context.LOCATION_SERVICE);
 

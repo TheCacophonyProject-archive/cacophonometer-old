@@ -14,7 +14,7 @@
         android:text="location: " />
     
     <EditText
-        android:id="@+id/edit_location"
+        android:id="@+id/settings_user_location_input"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="up a tree" />
@@ -34,11 +34,16 @@
         android:hint="server ip" />
 
     <Button
-        android:id="@+id/settings_get_gps_loccation"
+        android:id="@+id/settings_get_gps_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="getGPSLocation"
         android:text="Get GPS location" />
+    <TextView
+        android:id="@+id/settings_gps_info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"/>
 
     <Button
         android:id="@+id/save_settings"
@@ -48,8 +53,4 @@
         android:text="Save" />
 
     <requestFocus />
-
-
-
-
 </LinearLayout>

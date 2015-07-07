@@ -5,6 +5,7 @@ import java.io.File;
 import android.util.Log;
 
 import com.thecacophonytrust.cacophonometer.Settings;
+import com.thecacophonytrust.cacophonometer.util.Location;
 
 public class RecordingDataObject {
 
@@ -18,12 +19,10 @@ public class RecordingDataObject {
 	private long utc;				//UTC time of start of recording.
 	private int duration;			//Duration is seconds of the recording.
 	private String timezone;		//Timezone at the place of recording.
-	private double latitude;		//Latitude of device at time of recording.
-	private double longitude;		//Longitude of device at time of recording.
-	private long gpsLocationTime;	//Time when the GPS location was taken in UTC.
 	private String ruleName;		//Name of rule that started this recording.
 	private boolean uploaded;		//True if recording has been uploaded, false if not.
 	private File containingFolder;	//This is where the text file and should be found.
+	private Location location;
 
 	/**
 	 * Recording Data Object (RDO), this holds teh relevant data of a recording.
@@ -130,52 +129,16 @@ public class RecordingDataObject {
 		this.timezone = timezone;
 	}
 
-	/**
-	 * Returns the Latitude.
-	 * @return latitude
-	 */
-	public double getLatitude() {
-		return latitude;
+	public void setLocation(Location location){
+		this.location = location;
 	}
 
-	/**
-	 * Sets the Latitude.
-	 * @param latitude
-	 */
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	/**
-	 * Returns the Longitude.
-	 * @return longitude
-	 */
-	public double getLongitude() {
-		return longitude;
-	}
-
-	/**
-	 * Sets the Longitude.
-	 * @param longitude
-	 */
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
-	/**
-	 * Sets the UTC time that the GPS latitude and longitude associated with this recording were taken.
-	 * @param gpsLocationTime
-	 */
-	public void setGPSLocationTime(long gpsLocationTime){
-		this.gpsLocationTime = gpsLocationTime;
-	}
-
-	/**
-	 * Returns the UTC time tha the GPS latitude and longitude associated with this recording were taken.
-	 * @return a UTC time as a long
-	 */
-	public long getGpsLocationTime(){
-		return gpsLocationTime;
+	public Location getLocation(){
+		if (location == null) {
+			Log.v(LOG_TAG, "Making Location object for a RDO.");
+			location = new Location();
+		}
+		return location;
 	}
 
 	/**
