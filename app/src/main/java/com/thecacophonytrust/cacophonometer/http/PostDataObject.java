@@ -2,6 +2,7 @@ package com.thecacophonytrust.cacophonometer.http;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
@@ -21,7 +22,8 @@ public class PostDataObject {
 	private URL url;
 	
 	public PostDataObject(){
-		//TODO should probably put something here
+		postFields = new ArrayList<>();
+		postFiles = new ArrayList<>();
 		Log.d(LOG_TAG, "PostDataObject created.");
 	}
 	
@@ -31,6 +33,14 @@ public class PostDataObject {
 	
 	public void setPostFiles(List<PostFile> postFiles){
 		this.postFiles = postFiles;
+	}
+
+	public void addPostFile(PostFile postFile){
+		postFiles.add(postFile);
+	}
+
+	public void addPostField(PostField postField){
+		postFields.add(postField);
 	}
 	
 	public List<PostField> getPostFields(){

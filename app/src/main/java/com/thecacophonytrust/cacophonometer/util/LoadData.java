@@ -32,8 +32,7 @@ public class LoadData {
 		if (!settingFile.isFile()) {
 			Log.d(LOG_TAG, "Settings file was not found at: " + settingFile.getAbsolutePath());
 		} else {
-			Map<TextFileKeyType, String> map = TextFile.parseTextFile(settingFile);
-			parseValuePairForSettings(map);
+			Settings.setFromJSON(JSONFile.getJSON(settingFile.getAbsolutePath()));
 		}
 	}
 
@@ -81,14 +80,9 @@ public class LoadData {
 		}
 	}
 
-
-	/**
-	 * Goes through the recordings to upload folder and finds the .txt and .3gp files of recordings 
-	 * and saves the data to a RecordingDataObject. Then puts teh RDO in the to upload array in RecordingArray.class
-	 */
-	public static void loadRecordingsToUpload() {
-		Log.i(LOG_TAG, "Loading recordings to upload.....");
-		File recordingTextFiles[] = Settings.getRecordingsToUploadFolder().listFiles(fileFilter(FileFilterType.TEXT));
+	public static void loadRecordings() {
+		Log.i(LOG_TAG, "Loading recording.....");
+		File recordingTextFiles[] = Settings.getRecordingsToUploadFolder().listFiles(fileFilter(FileFilterType.JSON));
 		int recordingCount = 0;
 		for (int i = 0; i < recordingTextFiles.length; i++) {
 			RecordingDataObject rdo = loadRecording(recordingTextFiles[i]);
@@ -328,6 +322,13 @@ public class LoadData {
 						return true;
 					else
 						return false;
+				}
+			};
+		case JSON:
+			return new FileFilter() {
+				@Override
+				public boolean accept(File pathname) {
+					return ((pathname.getName().endsWith(".json")) && !pathname.isDirectory());
 				}
 			};
 		default:

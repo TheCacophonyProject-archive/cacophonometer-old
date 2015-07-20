@@ -2,6 +2,8 @@ package com.thecacophonytrust.cacophonometer.util;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
 public class Location{
 
     private static final String LOG_TAG = "Location.java";
@@ -78,11 +80,47 @@ public class Location{
         return hasAltitude;
     }
 
+    public void setHasAltitude(boolean hasAltitude){
+        this.hasAltitude = hasAltitude;
+    }
+
     public void setUserLocationInput(String userLocationInput){
         this.userLocationInput = userLocationInput;
     }
 
     public String getUserLocationInput(){
         return userLocationInput;
+    }
+
+    public void setFromJson(JSONObject locationJSON){
+        try{
+            setLongitude((double) locationJSON.get("LONGITUDE"));
+            setLatitude((double) locationJSON.get("LATITUDE"));
+            setGPSLocationTime((long) locationJSON.get("GPS_LOCATION_TIME"));
+            setAccuracy((float) locationJSON.get("ACCURACY"));
+            setAltitude((double) locationJSON.get("ACCURACY"));
+            setHasAltitude((boolean) locationJSON.get("HAS_ALTITUDE"));
+            setUserLocationInput((String) locationJSON.get("USER_LOCATION_INPUT"));
+        } catch (Exception e){
+            Log.e(LOG_TAG, "Error with loading location from JSON");
+            Log.e(LOG_TAG, e.toString());
+        }
+    }
+
+    public JSONObject asJSONObject(){
+        JSONObject locationJSON = new JSONObject();
+        try{
+            locationJSON.put("LONGITUDE", getLongitude());
+            locationJSON.put("LATITUDE", getLatitude());
+            locationJSON.put("GPS_LOCATION_TIME", getGPSLocationTime());
+            locationJSON.put("ACCURACY", getAccuracy());
+            locationJSON.put("ALTITUDE", getAltitude());
+            locationJSON.put("HAS_ALTITUDE", hasAltitude());
+            locationJSON.put("USER_LOCATION_INPUT", getUserLocationInput());
+        } catch (Exception e){
+            Log.e(LOG_TAG, "Error with making JSON object with RDO fields.");
+            Log.e(LOG_TAG, e.getMessage());
+        }
+        return locationJSON;
     }
 }

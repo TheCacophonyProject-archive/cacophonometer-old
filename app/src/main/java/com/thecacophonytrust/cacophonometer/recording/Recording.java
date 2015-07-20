@@ -2,21 +2,18 @@ package com.thecacophonytrust.cacophonometer.recording;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import com.thecacophonytrust.cacophonometer.activity.MainActivity;
 import com.thecacophonytrust.cacophonometer.rules.Rule;
 import com.thecacophonytrust.cacophonometer.Settings;
-import com.thecacophonytrust.cacophonometer.util.Location;
+import com.thecacophonytrust.cacophonometer.util.JSONFile;
 import com.thecacophonytrust.cacophonometer.util.TextFile;
 
 import android.media.MediaRecorder;
 import android.util.Log;
 
-import com.thecacophonytrust.cacophonometer.http.PostField;
-import com.thecacophonytrust.cacophonometer.enums.HttpPostFieldType;
 import com.thecacophonytrust.cacophonometer.enums.TextFileKeyType;
 
 public class Recording{
@@ -53,6 +50,9 @@ public class Recording{
 		rdo.setUploaded(false);
 
 		rdo.setLocation(Settings.getLocation().copy());
+		rdo.setBuildVersion(MainActivity.getBuildVersion());
+		rdo.setPhoneBuild(MainActivity.getPhoneBuild());
+
 		changeContainingFolder(rdo, Settings.getRecordingsToUploadFolder());
 		
 		//Moving recording to appropriate place
@@ -61,7 +61,7 @@ public class Recording{
 		
 		if (rdo.isValidRecording()) {
 			RecordingArray.addToUpload(rdo);
-			saveToFile(rdo);
+			JSONFile.saveJSONObject(rdo.getContainingFolder().toString()+"/"+rdo.getJSONFileName(), rdo.asJSONObject());
 			lastRDO = rdo;
 		} else 
 			Log.e(LOG_TAG, "Recording data object is not valid.");
@@ -100,24 +100,6 @@ public class Recording{
 	}
 
 	/**
-	 * Takes a RecordingDataObject and gets a list of HttpPostFields of its data
-	 * for use in uploading the recording.
-	 * 
-	 * @param rdo
-	 * @return
-	 */
-	public static List<PostField> getPostFields(RecordingDataObject rdo) {
-		Log.d(LOG_TAG, "Generating postFields.");
-		List<PostField> postFields = new ArrayList<>();
-
-		postFields.add(new PostField(HttpPostFieldType.DEVICE_ID, Long.toString(rdo.getDeviceId())));
-		postFields.add(new PostField(HttpPostFieldType.UTC, Long.toString(rdo.getUTC())));
-
-		return postFields;
-	}
-
-
-	/**
 	 * This sets the folder that contains the text and .3gp (recording) file.
 	 * This method is different from the RecordingDataObject.setContainingFolder
 	 * method as it moves the files to the new location.
@@ -134,8 +116,8 @@ public class Recording{
 		}
 
 		// Move text file
-		File newTextFile = new File(newFolder, rdo.getTextFileName());
-		File oldTextFile = new File(oldFolder, rdo.getTextFileName());
+		File newTextFile = new File(newFolder, rdo.getJSONFileName());
+		File oldTextFile = new File(oldFolder, rdo.getJSONFileName());
 		Log.d(LOG_TAG, "New Text Path: '" + newTextFile.getPath() + "'");
 		Log.d(LOG_TAG, "Old Text Path: '" + oldTextFile.getPath() + "'");
 		if (newTextFile.exists()) {
@@ -194,7 +176,7 @@ public class Recording{
 		valueMap.put(TextFileKeyType.USER_LOCATION_INPUT, rdo.getLocation().getUserLocationInput());
 		if (rdo.getLocation().hasAltitude())
 			valueMap.put(TextFileKeyType.ALTITUDE, Double.toString(rdo.getLocation().getAltitude()));
-		return TextFile.saveTextFile(valueMap, rdo.getContainingFolder(), rdo.getTextFileName());
+		return TextFile.saveTextFile(valueMap, rdo.getContainingFolder(), rdo.getJSONFileName());
 	}
 
 	/**

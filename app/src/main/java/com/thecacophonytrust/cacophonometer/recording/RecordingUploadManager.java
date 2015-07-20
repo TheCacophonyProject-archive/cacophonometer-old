@@ -47,8 +47,9 @@ public class RecordingUploadManager {
 			Log.i(LOG_TAG, "New recording to upload.");
 			//Making new PostDataObject and setting fields, files and URL.
 			PostDataObject pdo = new PostDataObject();
-			pdo.setPostFields(getPostFields(rdo));
-			pdo.setPostFiles(getPostFiles(rdo));
+
+			pdo.addPostField(new PostField("JSON_OBJECT", rdo.asJSONObject().toString()));
+			pdo.addPostFile(new PostFile(rdo.getRecordingFile()));
 			pdo.setURL(Settings.getServerUrl()+Settings.getUploadParam());
 
 			//Starting http post.
@@ -64,42 +65,6 @@ public class RecordingUploadManager {
 			result = true;
 		}
 		return result;
-	}
-
-	/**
-	 * Gets http post fields from the data in the RecordingDataObject
-	 * @param rdo RecordingDataObject
-	 * @return List of PostFields
-	 */
-	public static List<PostField> getPostFields(RecordingDataObject rdo) {
-		Log.d(LOG_TAG, "Generating postFields.");
-		List<PostField> postFields = new ArrayList<>();
-
-		postFields.add(new PostField(HttpPostFieldType.DEVICE_ID, Long.toString(rdo.getDeviceId())));
-		postFields.add(new PostField(HttpPostFieldType.UTC, Long.toString(rdo.getUTC())));
-		postFields.add(new PostField(HttpPostFieldType.LAT, Double.toString(rdo.getLocation().getLatitude())));
-		postFields.add(new PostField(HttpPostFieldType.LONG, Double.toString(rdo.getLocation().getLongitude())));
-		postFields.add(new PostField(HttpPostFieldType.UTC_OF_GPS, Long.toString(rdo.getLocation().getGPSLocationTime())));
-		postFields.add(new PostField(HttpPostFieldType.LOCATION_ACCURACY, Double.toString(rdo.getLocation().getAccuracy())));
-		postFields.add(new PostField(HttpPostFieldType.USER_LOCATION_INPUT, rdo.getLocation().getUserLocationInput()));
-		if (rdo.getLocation().hasAltitude())
-			postFields.add(new PostField(HttpPostFieldType.ALTITUDE, Double.toString(rdo.getLocation().getAltitude())));
-
-		return postFields;
-	}
-
-	/**
-	 * Gets the post files from the data in the RecordingDataObjects
-	 * @param rdo RecordingDataObject
-	 * @return List of PostFiles
-	 */
-	private static List<PostFile> getPostFiles(RecordingDataObject rdo) {
-		PostFile postFile;
-		List<PostFile> postFiles = new ArrayList<>();
-		postFile = new PostFile(rdo.getRecordingFilePath());
-		postFiles.add(postFile);
-		
-		return postFiles;
 	}
 
 	/**
@@ -201,7 +166,4 @@ public class RecordingUploadManager {
 		
 		return rdoResponseMap;
 	}
-
-	
-	
 }

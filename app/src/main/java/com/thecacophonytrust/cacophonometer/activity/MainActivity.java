@@ -1,6 +1,7 @@
 package com.thecacophonytrust.cacophonometer.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
@@ -22,6 +23,8 @@ import com.thecacophonytrust.cacophonometer.rules.Rule;
 import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 import com.thecacophonytrust.cacophonometer.recording.RecordingDataObject;
 
+import org.json.JSONObject;
+
 public class MainActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = "MainActivity.java";
@@ -41,8 +44,7 @@ public class MainActivity extends ActionBarActivity {
         RecordingArray.clear();
         LoadData.loadSettings();
         LoadData.loadRules();   //Loads the rules found in the set rules folder
-        LoadData.loadRecordingsToUpload();
-        LoadData.loadUploadedRecordings();
+        LoadData.loadRecordings();
         setContentView(R.layout.activity_main);
     }
 
@@ -155,5 +157,52 @@ public class MainActivity extends ActionBarActivity {
     public String getTelephonyManagerId(){
         TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         return tm.getDeviceId();
+    }
+
+    /**
+     * Gets data from the BUILD class and stores in a JSON object
+     * @return JSON object with phone build data.
+     */
+    public static JSONObject getPhoneBuild(){
+        JSONObject phoneBuildJSON = new JSONObject();
+        try {
+            phoneBuildJSON.put("BOARD", Build.BOARD);
+            phoneBuildJSON.put("BOOTLOADER", Build.BOOTLOADER);
+            phoneBuildJSON.put("BRAND", Build.BRAND);
+            phoneBuildJSON.put("DEVICE", Build.DEVICE);
+            phoneBuildJSON.put("DISPLAY", Build.DISPLAY);
+            phoneBuildJSON.put("FINGERPRINT", Build.FINGERPRINT);
+            phoneBuildJSON.put("HARDWARE", Build.HARDWARE);
+            phoneBuildJSON.put("HOST", Build.HOST);
+            phoneBuildJSON.put("ID", Build.ID);
+            phoneBuildJSON.put("MANUFACTURER", Build.MANUFACTURER);
+            phoneBuildJSON.put("MODEL", Build.MODEL);
+            phoneBuildJSON.put("PRODUCT", Build.PRODUCT);
+            phoneBuildJSON.put("SERIAL", Build.SERIAL);
+            phoneBuildJSON.put("TYPE", Build.TYPE);
+        } catch (Exception e){
+            Log.e(LOG_TAG, "Error with getting phone build data");
+            Log.e(LOG_TAG, e.getMessage());
+        }
+        return phoneBuildJSON;
+    }
+
+    /**
+     * Returns data from the Build.VERSION in a JSON object
+     * @return JSON object with phone build version data.
+     */
+    public static JSONObject getBuildVersion(){
+        JSONObject phoneBuildVersionJSON = new JSONObject();
+        try{
+            phoneBuildVersionJSON.put("CODENAME", Build.VERSION.CODENAME);
+            phoneBuildVersionJSON.put("INCREMENTAL", Build.VERSION.INCREMENTAL);
+            phoneBuildVersionJSON.put("SDK_INT", Build.VERSION.SDK_INT);
+            phoneBuildVersionJSON.put("RELEASE", Build.VERSION.RELEASE);
+
+        } catch (Exception e){
+            Log.e(LOG_TAG, "Error with getting phone build version data");
+            Log.e(LOG_TAG, e.getMessage());
+        }
+        return phoneBuildVersionJSON;
     }
 }

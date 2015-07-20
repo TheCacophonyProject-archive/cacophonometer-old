@@ -1,17 +1,16 @@
 package com.thecacophonytrust.cacophonometer;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.activity.MainActivity;
-import com.thecacophonytrust.cacophonometer.enums.TextFileKeyType;
+import com.thecacophonytrust.cacophonometer.util.JSONFile;
 import com.thecacophonytrust.cacophonometer.util.Location;
-import com.thecacophonytrust.cacophonometer.util.TextFile;
+
+import org.json.JSONObject;
 
 public class Settings {
 
@@ -38,11 +37,11 @@ public class Settings {
 	private static final String DEFAULT_RULES_FOLDER = "rules";
 	private static final String DEFAULT_RECORDINGS_TO_UPLOAD_FOLDER = "recordingToUpload";
 	private static final String DEFAULT_UPLOADED_RECORDINGS_FOLDER = "uploadedRecordings";
-	private static final String DEFAULT_SETTINGS_TEXT_FILE = "settings.txt";
+	private static final String DEFAULT_SETTINGS_JSON_FILE = "settings.json";
 
 	public static File getSettingsFile(){
 		if (settingsFile == null){
-			settingsFile = new File(getHomeFile(), DEFAULT_SETTINGS_TEXT_FILE);
+			settingsFile = new File(getHomeFile(), DEFAULT_SETTINGS_JSON_FILE);
 		}
 		return settingsFile;
 	}
@@ -184,18 +183,36 @@ public class Settings {
 		return location;
 	}
 
-	public static boolean saveToFile(){
-		Map<TextFileKeyType, String> valueMap = new HashMap<>();
-		valueMap.put(TextFileKeyType.SERVER_URL, getServerUrl());
-		valueMap.put(TextFileKeyType.LONGITUDE, Double.toString(getLocation().getLongitude()));
-		valueMap.put(TextFileKeyType.LATITUDE, Double.toString(getLocation().getLatitude()));
-		valueMap.put(TextFileKeyType.UTC_OF_GPS, Long.toString(getLocation().getGPSLocationTime()));
-		valueMap.put(TextFileKeyType.HAS_ALTITUDE, Boolean.toString(getLocation().hasAltitude()));
-		valueMap.put(TextFileKeyType.ALTITUDE, Double.toString(getLocation().getAltitude()));
-		valueMap.put(TextFileKeyType.LOCATION_ACCURACY, Float.toString(getLocation().getAccuracy()));
-		valueMap.put(TextFileKeyType.USER_LOCATION_INPUT, Settings.getLocation().getUserLocationInput());
 
+	/**
+	 *
+	 * @param json file with the settings
+	 */
+	public static void setFromJSON(JSONObject json){
+		try{
+			setServerUrl((String) json.get("SERVER_URL"));
+			JSONObject locationJson = (JSONObject) json.get("LOCATION");
+			Location location = new Location();
+			location.setFromJson(locationJson);
+		} catch (Exception e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+
+	}
+
+
+	/**
+	 * Saves the settings as a json file in the local cacophony directory
+	 */
+	public static void saveToFile(){
+		JSONObject jo = new JSONObject();
+		try{
+			jo.put("SERVER_URL", getServerUrl());
+			jo.put("LOCATION", getLocation().asJSONObject());
+		} catch (Exception e){
+			Log.e(LOG_TAG, e.toString());
+		}
+		JSONFile.saveJSONObject(getSettingsFile().getAbsolutePath(), jo);
 		Toast.makeText(MainActivity.getCurrent().getBaseContext(), "Settings saved", Toast.LENGTH_SHORT).show();
-		return TextFile.saveTextFile(valueMap, getSettingsFile().getParentFile(), getSettingsFile().getName());
 	}
 }

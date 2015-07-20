@@ -7,6 +7,9 @@ import android.util.Log;
 import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.util.Location;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class RecordingDataObject {
 
 	/**
@@ -23,6 +26,9 @@ public class RecordingDataObject {
 	private boolean uploaded;		//True if recording has been uploaded, false if not.
 	private File containingFolder;	//This is where the text file and should be found.
 	private Location location;
+	private JSONObject phoneBuild;	//A JSON Object containing data about the phone build.
+	private JSONObject buildVersion; //JSON Object containing data about the build version.
+
 
 	/**
 	 * Recording Data Object (RDO), this holds teh relevant data of a recording.
@@ -179,8 +185,8 @@ public class RecordingDataObject {
 	 * Returns the file name in the form of "deviceId_utc.txt"
 	 * @return text file name.
 	 */
-	public String getTextFileName(){
-		String fileName = deviceId + "_" + utc +".txt";
+	public String getJSONFileName(){
+		String fileName = deviceId + "_" + utc +".json";
 		return fileName;
 	}
 
@@ -207,6 +213,81 @@ public class RecordingDataObject {
 	 */
 	public String getRecordingFilePath(){
 			return getContainingFolder() + "/" + getRecordingFileName();
+	}
+
+	public JSONObject asJSONObject(){
+		JSONObject jo = new JSONObject();
+		JSONObject rdoJSONObject = new JSONObject();
+		try{
+			jo.put("RECORDING", fieldsAsJSON());
+			jo.put("LOCATION", getLocation().asJSONObject());
+			jo.put("PHONE_BUILD", getPhoneBuild());
+			jo.put("BUILD_VERSION", getBuildVersion());
+			rdoJSONObject.put("DATA_POINT", jo);
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "Error with making JSON object with RDO fields.");
+			Log.e(LOG_TAG, e.getMessage());
+		}
+		return rdoJSONObject;
+	}
+
+	public JSONObject getPhoneBuild(){
+		return phoneBuild;
+	}
+
+	public void setPhoneBuild(JSONObject phoneBuild){
+		this.phoneBuild = phoneBuild;
+	}
+
+	public JSONObject getBuildVersion(){
+		return buildVersion;
+	}
+
+	public void setBuildVersion(JSONObject buildVersion){
+		this.buildVersion = buildVersion;
+	}
+
+	/**
+	 * Makes a JSON object using the fields in the recording data object.
+	 * @return JSON object of RDO
+	 */
+	private JSONObject fieldsAsJSON(){
+		JSONObject recordingFields = new JSONObject();
+		try {
+			recordingFields.put("UTC", getUTC());
+			recordingFields.put("DURATION", getDuration());
+			recordingFields.put("RULE_NAME", getRuleName());
+			recordingFields.put("UPLOADED", isUploaded());
+			recordingFields.put("CONTAINING_FOLDER", getContainingFolder());
+		} catch (Exception e){
+			Log.e(LOG_TAG, "Error with making JSON object with RDO fields.");
+			Log.e(LOG_TAG, e.getMessage());
+		}
+		return recordingFields;
+	}
+
+	public void setFromJSON(JSONObject json){
+		try{
+			JSONObject recordingFieldsJSON = (JSONObject) json.get("RECORDING_FIELDS");
+			setUtc((long) recordingFieldsJSON.get("UTC"));
+			setDuration((int) recordingFieldsJSON.get("DURATION"));
+			setRuleName((String) recordingFieldsJSON.get("RULE_NAME"));
+			setUploaded((boolean) recordingFieldsJSON.get("UPLOADED"));
+			setContainingFolder(new File((String) recordingFieldsJSON.get("CONTAINING_FOLDER")));
+
+			Location location = new Location();
+			JSONObject locationJSON = (JSONObject) json.get("LOCATION");
+			location.setFromJson(locationJSON);
+
+
+
+			setPhoneBuild((JSONObject) json.get("PHONE_BUILD"));
+			setBuildVersion((JSONObject) json.get("BUILD_VERSION"));
+
+
+		} catch (Exception e){
+			Log.e(LOG_TAG, "Exception when loading recording data object from JSON");
+		}
 	}
 	
 	@Override

@@ -80,7 +80,7 @@ public class Post extends AsyncTask<PostDataObject, Integer, PostResponse>{
 			DataOutputStream outputStream = new DataOutputStream (urlConn.getOutputStream ());
 			for (int i = 0; postFields != null && i < postFields.size(); i++) {
 				Log.d(LOG_TAG, "Adding post field.");
-				String key = postFields.get(i).getKey().toString();
+				String key = postFields.get(i).getKey();
 				String value = postFields.get(i).getValue();
 				outputStream.writeBytes(TWO_HYPHENS + boundary + LINE_END);
 				outputStream
@@ -95,13 +95,11 @@ public class Post extends AsyncTask<PostDataObject, Integer, PostResponse>{
 			
 			for (int i = 0; postFiles != null && i < postFiles.size(); i++) {
 				Log.d(LOG_TAG, "Adding post file.");
-				// String fileName = httpPostFiles.get(i).getName();
-				String path = postFiles.get(i).getPath();
-				File f = new File(path);
+				File f = postFiles.get(i).getFile();
 				if (!f.exists())
-					Log.e(LOG_TAG, "Recording not found \""+ path +"\"");
+					Log.e(LOG_TAG, "Recording not found \""+ f.getAbsolutePath() +"\"");
 				outputStream.writeBytes(TWO_HYPHENS + boundary + LINE_END);
-				outputStream.writeBytes("Content-Disposition: form-data; name=\"upload\";filename=\"file.txt\""+ LINE_END);
+				outputStream.writeBytes("Content-Disposition: form-data; name=\"upload\";filename=\"file.txt\""+ LINE_END); //TODO change file name etc...
 				//outputStream.writeBytes("Content-Type: text/plain; charset=UTF-8"+ LINE_END);
 				outputStream.writeBytes(LINE_END);
 				FileInputStream fileInputStream = new FileInputStream(f);
