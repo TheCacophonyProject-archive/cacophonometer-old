@@ -2,14 +2,13 @@ package com.thecacophonytrust.cacophonometer.rules;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.util.Log;
 
-import com.thecacophonytrust.cacophonometer.enums.TextFileKeyType;
 import com.thecacophonytrust.cacophonometer.Settings;
-import com.thecacophonytrust.cacophonometer.util.TextFile;
+import com.thecacophonytrust.cacophonometer.util.JSONFile;
+
+import org.json.JSONObject;
 
 public class Rule {
 
@@ -27,7 +26,23 @@ public class Rule {
 	public Rule(){
 		
 	}
-	
+
+	public Rule(JSONObject jsonObject){
+		loadFromJSON(jsonObject);
+	}
+
+	public void loadFromJSON(JSONObject jsonObject){
+		try{
+			JSONObject jo = (JSONObject) jsonObject.get("RULE");
+			setName((String) jo.get("NAME"));
+			setDuration(Integer.valueOf((String) jo.get("DURATION")));
+			setStartTimeHour(Integer.valueOf((String) jo.get("START_TIME_HOUR")));
+			setStartTimeMinute(Integer.valueOf((String) jo.get("START_TIME_MINUTE")));
+		} catch (Exception e){
+			Log.e(LOG_TAG, "Error when making nrw rule from JSON file.");
+			//TODO try to fix error
+		}
+	}
 	
 	public String getName() {
 		return name;
@@ -120,19 +135,24 @@ public class Rule {
 		return true;
 	}
 
+
 	/**
-	 * Saves a rule to a text file.
-	 * @return true if rule was saved successfully
+	 * Saves a rule as a JSON file.
 	 */
-	public boolean save(){
-		Map<TextFileKeyType, String> valueMap = new HashMap<>();
-		
-		valueMap.put(TextFileKeyType.NAME, getName());
-		valueMap.put(TextFileKeyType.START_TIME_HOUR, Integer.toString(getStartTimeHour()));
-		valueMap.put(TextFileKeyType.START_TIME_MINUTE, Integer.toString(getStartTimeMinute()));
-		valueMap.put(TextFileKeyType.DURATION, Integer.toString(getDuration()));
-		
-		return TextFile.saveTextFile(valueMap, Settings.getRulesFolder(), getTextFileName());
+	public void saveAsJSON(){
+		JSONObject ruleJO = new JSONObject();
+		JSONObject fields = new JSONObject();
+		try {
+			fields.put("NAME", getName());
+			fields.put("START_TIME_HOUR", Integer.toString(getStartTimeHour()));
+			fields.put("START_TIME_MINUTE", Integer.toString(getStartTimeMinute()));
+			fields.put("DURATION", Integer.toString(getDuration()));
+			ruleJO.put("RULE", fields);
+		} catch (Exception e){
+			Log.e(LOG_TAG, "Error when making a JSON from a rule");
+		}
+		String fileName = Settings.getRulesFolder() + "/" + getName() + ".json";
+		JSONFile.saveJSONObject(fileName, ruleJO);
 	}
 
 	/**

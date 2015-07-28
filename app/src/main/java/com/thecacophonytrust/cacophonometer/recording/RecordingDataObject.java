@@ -7,7 +7,6 @@ import android.util.Log;
 import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.util.Location;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class RecordingDataObject {
@@ -24,7 +23,6 @@ public class RecordingDataObject {
 	private String timezone;		//Timezone at the place of recording.
 	private String ruleName;		//Name of rule that started this recording.
 	private boolean uploaded;		//True if recording has been uploaded, false if not.
-	private File containingFolder;	//This is where the text file and should be found.
 	private Location location;
 	private JSONObject phoneBuild;	//A JSON Object containing data about the phone build.
 	private JSONObject buildVersion; //JSON Object containing data about the build version.
@@ -36,31 +34,15 @@ public class RecordingDataObject {
 	 */
 	public RecordingDataObject(String ruleName){
 		this.ruleName = ruleName;
-		Log.d(LOG_TAG, "Recording '"+ruleName+"' added");
-	}
-
-
-	/**
-	 * Gets the folder that contains the text file and recording.
-	 * @return containing folder
-	 */
-	public File getContainingFolder() {
-		if (containingFolder == null) {
-			if (uploaded){
-				containingFolder = Settings.getUploadedRecordingsFolder();
-			} else {
-				containingFolder = Settings.getRecordingsToUploadFolder();
-			}
-		}
-		return containingFolder;
+		Log.d(LOG_TAG, "Recording '" + ruleName + "' added");
 	}
 
 	/**
-	 * Sets the containing folder of the data text file and recording.
-	 * @param containingFolder
+	 * Makes a new Recording Data Object using a JSON object.
+	 * @param jsonObject to load data from
 	 */
-	public void setContainingFolder(File containingFolder) {
-		this.containingFolder = containingFolder;
+	public RecordingDataObject(JSONObject jsonObject){
+		setFromJSON(jsonObject);
 	}
 
 	/**
@@ -182,12 +164,11 @@ public class RecordingDataObject {
 	}
 
 	/**
-	 * Returns the file name in the form of "deviceId_utc.txt"
+	 * Returns the file name in the form of "deviceId_utc.json"
 	 * @return text file name.
 	 */
 	public String getJSONFileName(){
-		String fileName = deviceId + "_" + utc +".json";
-		return fileName;
+		return deviceId + "_" + utc +".json";
 	}
 
 	/**
@@ -195,8 +176,7 @@ public class RecordingDataObject {
 	 * @return recording file name.
 	 */
 	public String getRecordingFileName(){
-		String fileName = deviceId + "_" + utc +".3gp";
-		return fileName;
+		return deviceId + "_" + utc +".3gp";
 	}
 
 	/**
@@ -204,7 +184,7 @@ public class RecordingDataObject {
 	 * @return the recording file
 	 */
 	public File getRecordingFile() {
-			return new File(getContainingFolder(), getRecordingFileName());
+		return new File(Settings.getRecordingsFolder(), getRecordingFileName());
 	}
 
 	/**
@@ -212,14 +192,15 @@ public class RecordingDataObject {
 	 * @return  recording file path.
 	 */
 	public String getRecordingFilePath(){
-			return getContainingFolder() + "/" + getRecordingFileName();
+			return Settings.getRecordingsFolder() + "/" + getRecordingFileName();
 	}
 
 	public JSONObject asJSONObject(){
 		JSONObject jo = new JSONObject();
 		JSONObject rdoJSONObject = new JSONObject();
 		try{
-			jo.put("RECORDING", fieldsAsJSON());
+			jo.put("DEVICE_ID", Long.toString(getDeviceId()));
+			jo.put("RECORDING_FIELDS", fieldsAsJSON());
 			jo.put("LOCATION", getLocation().asJSONObject());
 			jo.put("PHONE_BUILD", getPhoneBuild());
 			jo.put("BUILD_VERSION", getBuildVersion());
@@ -254,11 +235,10 @@ public class RecordingDataObject {
 	private JSONObject fieldsAsJSON(){
 		JSONObject recordingFields = new JSONObject();
 		try {
-			recordingFields.put("UTC", getUTC());
-			recordingFields.put("DURATION", getDuration());
+			recordingFields.put("UTC", Long.toString(getUTC()));
+			recordingFields.put("DURATION", Integer.toString(getDuration()));
 			recordingFields.put("RULE_NAME", getRuleName());
-			recordingFields.put("UPLOADED", isUploaded());
-			recordingFields.put("CONTAINING_FOLDER", getContainingFolder());
+			recordingFields.put("UPLOADED", Boolean.toString(isUploaded()));
 		} catch (Exception e){
 			Log.e(LOG_TAG, "Error with making JSON object with RDO fields.");
 			Log.e(LOG_TAG, e.getMessage());
@@ -266,27 +246,32 @@ public class RecordingDataObject {
 		return recordingFields;
 	}
 
+	/**
+	 * Sets variables of the recording data object using a JSON file.
+	 * @param json object that contains the recording data.
+	 */
 	public void setFromJSON(JSONObject json){
 		try{
-			JSONObject recordingFieldsJSON = (JSONObject) json.get("RECORDING_FIELDS");
-			setUtc((long) recordingFieldsJSON.get("UTC"));
-			setDuration((int) recordingFieldsJSON.get("DURATION"));
+			JSONObject jo = (JSONObject) json.get("DATA_POINT");
+			//setDeviceId(Long.valueOf((String) jo.get("DEVICE_ID")));
+			JSONObject recordingFieldsJSON = (JSONObject) jo.get("RECORDING_FIELDS");
+			setUtc(Long.valueOf((String) recordingFieldsJSON.get("UTC")));
+			setDuration(Integer.valueOf((String) recordingFieldsJSON.get("DURATION")));
 			setRuleName((String) recordingFieldsJSON.get("RULE_NAME"));
-			setUploaded((boolean) recordingFieldsJSON.get("UPLOADED"));
-			setContainingFolder(new File((String) recordingFieldsJSON.get("CONTAINING_FOLDER")));
+			setUploaded(Boolean.valueOf((String) recordingFieldsJSON.get("UPLOADED")));
 
 			Location location = new Location();
-			JSONObject locationJSON = (JSONObject) json.get("LOCATION");
+			JSONObject locationJSON = (JSONObject) jo.get("LOCATION");
 			location.setFromJson(locationJSON);
 
-
-
-			setPhoneBuild((JSONObject) json.get("PHONE_BUILD"));
-			setBuildVersion((JSONObject) json.get("BUILD_VERSION"));
-
+			setPhoneBuild((JSONObject) jo.get("PHONE_BUILD"));
+			setBuildVersion((JSONObject) jo.get("BUILD_VERSION"));
+			Log.d(LOG_TAG, "Loaded recording from JSON: " + this.toString());
 
 		} catch (Exception e){
+			Log.v(LOG_TAG, json.toString());
 			Log.e(LOG_TAG, "Exception when loading recording data object from JSON");
+			Log.e(LOG_TAG, e.toString());
 		}
 	}
 	

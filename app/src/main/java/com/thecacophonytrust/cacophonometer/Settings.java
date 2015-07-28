@@ -25,8 +25,7 @@ public class Settings {
 	private static String uploadParam = null;
 	private static File homeFile = null;
 	private static File tempFile = null;
-	private static File recordingsToUploadFolder = null;
-	private static File uploadedRecordingsFolder = null;
+	private static File recordingFolder = null;
 	private static File settingsFile = null;
 	private static File rulesFolder = null;
 	private static long deviceId = 0;
@@ -35,8 +34,7 @@ public class Settings {
 	private static final String DEFAULT_UPLOAD_PARAM = "/upload";
 	private static final String DEFAULT_TEMP_FOLDER = "temp";
 	private static final String DEFAULT_RULES_FOLDER = "rules";
-	private static final String DEFAULT_RECORDINGS_TO_UPLOAD_FOLDER = "recordingToUpload";
-	private static final String DEFAULT_UPLOADED_RECORDINGS_FOLDER = "uploadedRecordings";
+	private static final String DEFAULT_RECORDINGS_FOLDER = "recordings";
 	private static final String DEFAULT_SETTINGS_JSON_FILE = "settings.json";
 
 	public static File getSettingsFile(){
@@ -118,38 +116,6 @@ public class Settings {
 	}
 
     /**
-     * Returns the uploaded recordings folder, folder where uploaded recordings .txt and .3gp files are saved.
-     * If uploadedRecordingsFolder is null it is set to default value.
-     * @return uploaded recordings folder
-     */
-	public static File getUploadedRecordingsFolder(){
-		if (uploadedRecordingsFolder == null){
-			uploadedRecordingsFolder = new File(getHomeFile(), DEFAULT_UPLOADED_RECORDINGS_FOLDER);
-			if (!uploadedRecordingsFolder.exists() && !uploadedRecordingsFolder.isDirectory() && !uploadedRecordingsFolder.mkdirs()){
-				Log.e(LOG_TAG, "Unable to write to file");
-				//TODO, exit program safely from here and display error.
-			}
-		}
-		return uploadedRecordingsFolder;
-	}
-
-    /**
-     * Returns the recordings to upload folder, folder where uploaded recordings .txt and .3gp are saved.
-     * If recordingsToUpload is null then it is ser to default value.
-     * @return
-     */
-	public static File getRecordingsToUploadFolder(){
-		if (recordingsToUploadFolder == null){
-			recordingsToUploadFolder = new File(getHomeFile(), DEFAULT_RECORDINGS_TO_UPLOAD_FOLDER);
-			if (!recordingsToUploadFolder.exists() && !recordingsToUploadFolder.isDirectory() && !recordingsToUploadFolder.mkdirs()){
-				Log.e(LOG_TAG, "Unable to write to file");
-				//TODO, exit program safely from here and display error.
-			}
-		}
-		return recordingsToUploadFolder;
-	}
-
-    /**
      * Returns the temp file.
      * If tempFile is null then it is set to default.
      * @return temp file
@@ -183,28 +149,41 @@ public class Settings {
 		return location;
 	}
 
+	/**
+	 * Returns the folder that contains the recordings after checking that is is a current folder.
+	 * @return folder that contains the recordings (JSON files and .3gp files)
+	 */
+	public static File getRecordingsFolder(){
+		if (recordingFolder == null){
+			recordingFolder = new File(getHomeFile(), DEFAULT_RECORDINGS_FOLDER);
+			if (!recordingFolder.exists() && !recordingFolder.isDirectory() && !recordingFolder.mkdirs()){
+				Log.e(LOG_TAG, "Error with the recording Folder");
+				//TODO try to fix problem and if cant output error message then exit, maybe send error to server.
+			}
+		}
+		return recordingFolder;
+	}
 
 	/**
-	 *
+	 * Sets the settings using a JSON file.
 	 * @param json file with the settings
 	 */
 	public static void setFromJSON(JSONObject json){
 		try{
 			setServerUrl((String) json.get("SERVER_URL"));
 			JSONObject locationJson = (JSONObject) json.get("LOCATION");
-			Location location = new Location();
 			location.setFromJson(locationJson);
+			Log.i(LOG_TAG, "Settings were loaded from JSON");
 		} catch (Exception e) {
 			Log.e(LOG_TAG, e.toString());
 		}
-
 	}
 
 
 	/**
 	 * Saves the settings as a json file in the local cacophony directory
 	 */
-	public static void saveToFile(){
+	public static void saveToFileAsJSON(){
 		JSONObject jo = new JSONObject();
 		try{
 			jo.put("SERVER_URL", getServerUrl());

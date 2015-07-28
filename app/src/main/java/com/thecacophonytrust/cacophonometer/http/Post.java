@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.List;
 
 import com.thecacophonytrust.cacophonometer.enums.PostErrorType;
@@ -67,6 +68,8 @@ public class Post extends AsyncTask<PostDataObject, Integer, PostResponse>{
 	private boolean startPost(List<PostField> postFields, List<PostFile> postFiles, URL url){
 		Log.d(LOG_TAG, "Starting post");
 		Log.d(LOG_TAG, "URL: " + url);
+		Log.v(LOG_TAG, "Post fields: " + Arrays.toString(postFields.toArray()));
+		Log.v(LOG_TAG, "Post files: " + Arrays.toString(postFiles.toArray()));
 		String boundary = Long.toHexString(System.currentTimeMillis());
 		try {
 			URLConnection urlConn = url.openConnection();
@@ -142,7 +145,9 @@ public class Post extends AsyncTask<PostDataObject, Integer, PostResponse>{
 			
 			return true;
 		} catch (Exception e) {
+			Log.e(LOG_TAG, "Error when trying to connect to post data.");
 			Log.e(LOG_TAG, e.toString());
+
 			errorType = PostErrorType.COULD_NOT_CONNECT_TO_SERVER;
 			postResponse = new PostResponse(null, errorType, 0);
 			return false;

@@ -1,6 +1,7 @@
 package com.thecacophonytrust.cacophonometer.recording;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -59,6 +60,7 @@ public class RecordingArray {
 			if (rdo.getRuleName().equals(ruleName))
 				rdoList.add(rdo);
 		}
+		Log.d(LOG_TAG, "Recordings to upload by Rule '"+ruleName+"': " + Arrays.toString(rdoList.toArray()));
 		return rdoList;
 	}
 
@@ -73,6 +75,7 @@ public class RecordingArray {
 			if (rdo.getRuleName().equals(ruleName))
 				rdoList.add(rdo);
 		}
+		Log.d(LOG_TAG, "Recordings to upload by Rule '"+ruleName+"': " + Arrays.toString(rdoList.toArray()));
 		return rdoList;
 	}
 

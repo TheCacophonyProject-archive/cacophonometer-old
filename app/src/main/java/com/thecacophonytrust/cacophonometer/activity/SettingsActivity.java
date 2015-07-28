@@ -25,6 +25,7 @@ public class SettingsActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
+		updateTextFields();
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class SettingsActivity extends ActionBarActivity {
 				Log.d(LOG_TAG, "Server URL is not valid '"+serverString+"'");
 			}
 		}
-		Settings.saveToFile();
+		Settings.saveToFileAsJSON();
 	}
 
 	@Override

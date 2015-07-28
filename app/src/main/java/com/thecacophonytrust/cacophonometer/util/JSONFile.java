@@ -36,8 +36,10 @@ public class JSONFile {
         File parent = new File(f.getParent());
         FileWriter fw;
         try {
-            if (!parent.isDirectory())
-                parent.mkdirs();
+            if (!parent.isDirectory() || parent.mkdirs()) {
+                Log.e(LOG_TAG, "Failed to make directory at: " + parent.toString());
+                //TODO deal with this error properly, try to save in different directory maybe
+            }
             fw = new FileWriter(f, false);
             fw.write(jsonObject.toString());
             fw.close();

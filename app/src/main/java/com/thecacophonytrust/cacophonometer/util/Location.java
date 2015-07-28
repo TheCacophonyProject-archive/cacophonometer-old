@@ -35,6 +35,7 @@ public class Location{
     public void setLongitude(double longitude){
         //TODO check iv valid longitude
         this.longitude = longitude;
+        Log.v(LOG_TAG, "Longitude set to " + longitude);
     }
 
     public double getLongitude(){
@@ -94,12 +95,12 @@ public class Location{
 
     public void setFromJson(JSONObject locationJSON){
         try{
-            setLongitude((double) locationJSON.get("LONGITUDE"));
-            setLatitude((double) locationJSON.get("LATITUDE"));
-            setGPSLocationTime((long) locationJSON.get("GPS_LOCATION_TIME"));
-            setAccuracy((float) locationJSON.get("ACCURACY"));
-            setAltitude((double) locationJSON.get("ACCURACY"));
-            setHasAltitude((boolean) locationJSON.get("HAS_ALTITUDE"));
+            setLongitude(Double.valueOf((String) locationJSON.get("LONGITUDE")));
+            setLatitude(Double.valueOf((String) locationJSON.get("LATITUDE")));
+            setGPSLocationTime(Long.valueOf((String) locationJSON.get("GPS_LOCATION_TIME")));
+            setAccuracy(Float.valueOf((String) locationJSON.get("ACCURACY")));
+            setAltitude(Double.valueOf((String) locationJSON.get("ACCURACY")));
+            setHasAltitude(Boolean.valueOf((String) locationJSON.get("HAS_ALTITUDE")));
             setUserLocationInput((String) locationJSON.get("USER_LOCATION_INPUT"));
         } catch (Exception e){
             Log.e(LOG_TAG, "Error with loading location from JSON");
@@ -110,12 +111,12 @@ public class Location{
     public JSONObject asJSONObject(){
         JSONObject locationJSON = new JSONObject();
         try{
-            locationJSON.put("LONGITUDE", getLongitude());
-            locationJSON.put("LATITUDE", getLatitude());
-            locationJSON.put("GPS_LOCATION_TIME", getGPSLocationTime());
-            locationJSON.put("ACCURACY", getAccuracy());
-            locationJSON.put("ALTITUDE", getAltitude());
-            locationJSON.put("HAS_ALTITUDE", hasAltitude());
+            locationJSON.put("LONGITUDE", Double.toString(getLongitude()));
+            locationJSON.put("LATITUDE", Double.toString(getLatitude()));
+            locationJSON.put("GPS_LOCATION_TIME", Long.toString(getGPSLocationTime()));
+            locationJSON.put("ACCURACY", Float.toString(getAccuracy()));
+            locationJSON.put("ALTITUDE", Double.toString(getAltitude()));
+            locationJSON.put("HAS_ALTITUDE", Boolean.toString(hasAltitude()));
             locationJSON.put("USER_LOCATION_INPUT", getUserLocationInput());
         } catch (Exception e){
             Log.e(LOG_TAG, "Error with making JSON object with RDO fields.");

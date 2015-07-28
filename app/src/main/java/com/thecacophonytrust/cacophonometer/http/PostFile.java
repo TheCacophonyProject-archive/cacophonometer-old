@@ -22,6 +22,7 @@ public class PostFile {
 			length = file.length();
 		} else {
 			Log.e(LOG_TAG, "File not found at: " + file.getAbsolutePath());
+			//TODO, deal with this error.
 		}
 	}
 	
@@ -43,5 +44,16 @@ public class PostFile {
 
 	public long getLength() {
 		return length;
+	}
+
+	@Override
+	public String toString() {
+		return "PostFile{" +
+				"file=" + file +
+				", name='" + name + '\'' +
+				", type='" + type + '\'' +
+				", hash='" + hash + '\'' +
+				", length=" + length +
+				'}';
 	}
 }

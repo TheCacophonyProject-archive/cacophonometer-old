@@ -22,4 +22,12 @@ public class PostField {
 		//TODO check that the field is valid
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "PostField{" +
+				"key='" + key + '\'' +
+				", value='" + value + '\'' +
+				'}';
+	}
 }

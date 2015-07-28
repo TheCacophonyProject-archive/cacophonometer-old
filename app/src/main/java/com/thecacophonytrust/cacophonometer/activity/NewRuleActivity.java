@@ -84,7 +84,7 @@ public class NewRuleActivity extends ActionBarActivity {
 			rule.setDuration(Integer.parseInt(length.getText().toString()));
 			if (rule.isValid()){
 				RulesArray.addRule(rule);
-				rule.save();
+				rule.saveAsJSON();
 				finish();
 			}
 		}

@@ -38,7 +38,6 @@ public class PlayRecording {
 		
 		if (!recording.exists() || recording.isDirectory()){
 			Log.d(LOG_TAG, "Error with file: " + recording.getPath());
-			Recording.updateFileLocation(rdo);
 			if (!recording.exists() || recording.isDirectory())
 				return false;
 		}

@@ -18,6 +18,9 @@ import com.thecacophonytrust.cacophonometer.http.PostField;
 import com.thecacophonytrust.cacophonometer.http.PostFile;
 import com.thecacophonytrust.cacophonometer.http.PostResponse;
 import com.thecacophonytrust.cacophonometer.enums.HttpPostFieldType;
+import com.thecacophonytrust.cacophonometer.util.JSONFile;
+
+import org.json.JSONObject;
 
 public class RecordingUploadManager {
 
@@ -103,9 +106,9 @@ public class RecordingUploadManager {
 			rdoMap.remove(rdo);
 			RecordingArray.addUploadedRecording(rdo);
 			RecordingArray.removeUploadingRecording(rdo);
-			Log.i(LOG_TAG, "Recording ("+rdo.toString()+") was uploaded");	//TODO make a shorter toString option for the RDO.
+			Log.i(LOG_TAG, "Recording (" + rdo.toString() + ") was uploaded");	//TODO make a shorter toString option for the RDO.
 			rdo.setUploaded(true);
-			Recording.updateFileLocation(rdo);
+			JSONFile.saveJSONObject(Settings.getRecordingsFolder()+"/"+rdo.getJSONFileName(), rdo.asJSONObject());
 		}
 
 		//For each upload that wasn't successful: Remove from RDO Map, update RecordingArray.
