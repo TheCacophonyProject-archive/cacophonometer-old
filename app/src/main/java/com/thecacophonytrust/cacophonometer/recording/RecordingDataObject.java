@@ -164,11 +164,11 @@ public class RecordingDataObject {
 	}
 
 	/**
-	 * Returns the file name in the form of "deviceId_utc.json"
+	 * Returns the file name in the form of "deviceId_utc.jsonMetadata"
 	 * @return text file name.
 	 */
 	public String getJSONFileName(){
-		return deviceId + "_" + utc +".json";
+		return deviceId + "_" + utc +".jsonMetadata";
 	}
 
 	/**

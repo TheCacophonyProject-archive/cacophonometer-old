@@ -194,4 +194,12 @@ public class Settings {
 		JSONFile.saveJSONObject(getSettingsFile().getAbsolutePath(), jo);
 		Toast.makeText(MainActivity.getCurrent().getBaseContext(), "Settings saved", Toast.LENGTH_SHORT).show();
 	}
+
+	public static String getAppVersion(){
+		return "TESTING VERSION STILL";
+	}
+
+	public static int getMicrophoneId(){
+		return 1;
+	}
 }
