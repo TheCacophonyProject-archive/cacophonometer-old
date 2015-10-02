@@ -115,7 +115,7 @@ public class LoadData {
 			return new FileFilter() {
 				@Override
 				public boolean accept(File pathname) {
-					return ((pathname.getName().endsWith(".jsonMetadata")) && !pathname.isDirectory());
+					return ((pathname.getName().endsWith(".JSONMetadata")) && !pathname.isDirectory());
 				}
 			};
 		default:

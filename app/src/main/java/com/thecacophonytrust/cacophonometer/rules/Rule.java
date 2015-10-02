@@ -151,7 +151,7 @@ public class Rule {
 		} catch (Exception e){
 			Log.e(LOG_TAG, "Error when making a JSON from a rule");
 		}
-		String fileName = Settings.getRulesFolder() + "/" + getName() + ".jsonMetadata";
+		String fileName = Settings.getRulesFolder() + "/" + getName() + ".JSONMetadata";
 		JSONFile.saveJSONObject(fileName, ruleJO);
 	}
 

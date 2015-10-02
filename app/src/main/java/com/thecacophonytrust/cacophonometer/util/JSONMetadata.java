@@ -16,17 +16,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class jsonMetadata {
-    private static final String LOG_TAG = "jsonMetadata.java";
+public class JSONMetadata {
+    private static final String LOG_TAG = "JSONMetadata.java";
 
     private static final String HARDWARE_FOLDER_NAME = "hardware";
     private static final String SOFTWARE_FOLDER_NAME = "software";
     private static final String LOCATION_FOLDER_NAME = "location";
 
-    //These Maps have the jsonMetadata objects of the hardware, software and location.
-    //The Key of these maps are the local id for the jsonMetadata object and not the id that is used by the database/uploadServer.
+    //These Maps have the JSONMetadata objects of the hardware, software and location.
+    //The Key of these maps are the local id for the JSONMetadata object and not the id that is used by the database/uploadServer.
     //When a upload of a recording is done the response from the server might give a new id. This is the id to be saved in
-    //the jsonMetadata object part of the map and is one used by the database.
+    //the JSONMetadata object part of the map and is one used by the database.
     private static Map<Integer, JSONObject> hardwareJsonMap = new HashMap<>();
     private static Map<Integer, JSONObject> softwareJsonMap = new HashMap<>();
     private static Map<Integer, JSONObject> locationJsonMap = new HashMap<>();
@@ -95,7 +95,7 @@ public class jsonMetadata {
             if (!folder.mkdirs()){
                 Log.e(LOG_TAG, "Error with making folders: " + folder.getAbsolutePath());
             }
-            Log.i(LOG_TAG, "No hardware jsonMetadata objects were loaded.");
+            Log.i(LOG_TAG, "No hardware JSONMetadata objects were loaded.");
         } else if (!folder.isDirectory()) {
             Log.e(LOG_TAG, "Error: folder location for the hardware JSON objects was not a directory.");
             //TODO deal with this error
@@ -130,7 +130,7 @@ public class jsonMetadata {
                         return false;
                     }
                 } catch (JSONException e) {
-                    Log.e(LOG_TAG, "Error when seeing if two jsonMetadata objects are equal.");
+                    Log.e(LOG_TAG, "Error when seeing if two JSONMetadata objects are equal.");
                 }
             }
         }
