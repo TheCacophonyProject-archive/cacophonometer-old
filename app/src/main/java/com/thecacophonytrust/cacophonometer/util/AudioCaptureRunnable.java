@@ -27,7 +27,6 @@ public class AudioCaptureRunnable implements Runnable{
         Log.i(LOG_TAG, "Starting audio capture runnable.");
         finished = false;
         setRecordingDataObject();
-        rdo = new RecordingDataObject(rule.getName());
         long sleepTime = rule.getDuration() * 1000;
         try {
             mRecorder = new MediaRecorder();
