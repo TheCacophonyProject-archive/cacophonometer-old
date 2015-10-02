@@ -1,7 +1,6 @@
 package com.thecacophonytrust.cacophonometer.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
@@ -13,17 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
+import com.thecacophonytrust.cacophonometer.recording.RecordingManager;
 import com.thecacophonytrust.cacophonometer.util.LoadData;
 import com.thecacophonytrust.cacophonometer.recording.PlayRecording;
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.recording.Recording;
-import com.thecacophonytrust.cacophonometer.recording.RecordingAlarm;
 import com.thecacophonytrust.cacophonometer.recording.RecordingUploadManager;
 import com.thecacophonytrust.cacophonometer.rules.Rule;
 import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 import com.thecacophonytrust.cacophonometer.recording.RecordingDataObject;
-
-import org.json.JSONObject;
+import com.thecacophonytrust.cacophonometer.util.Update;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -40,11 +38,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "MainActivity created.");
         mainActivity = this;    //Saving this activity statically so can be accessed outside by other classes
-        RulesArray.clear();
-        RecordingArray.clear();
-        LoadData.loadSettings();
-        LoadData.loadRules();   //Loads the rules found in the set rules folder
-        LoadData.loadRecordings();
+
+        init();
+
+
         setContentView(R.layout.activity_main);
     }
 
@@ -67,8 +64,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         Log.d(LOG_TAG, "Resuming main activity");
-        RecordingAlarm.update(getApplicationContext()); //Updates the alarm for the next recording
-        RecordingUploadManager.update();
+        Update.now();
         updateText();   //Updates the text displayed on the screen for MainActivity
         displayNextRecordingStatus();
         super.onResume();
@@ -79,12 +75,13 @@ public class MainActivity extends ActionBarActivity {
      */
     private void displayNextRecordingStatus(){
         String text;
-        if (Recording.isRecording())
-            text = "Device is recording";
+        if (RecordingManager.isRecordingNow())
+            text = "Device is recording now.";
         else if (RulesArray.getNextRule() == null)
             text = "No rules found for recording";
         else {
-            long timeToNextRecording = RecordingAlarm.timeUntilRecording();
+            //TODO this could be done better... but works for now.
+            long timeToNextRecording = (RecordingManager.getRecordingStartTime() - System.currentTimeMillis())/1000;
             int hours = (int) (timeToNextRecording / 3600);
             int minutes = (int) (timeToNextRecording % 3600) / 60;
             int seconds = (int) timeToNextRecording % 60;
@@ -146,16 +143,13 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    /**
-     * Returns the main method, enables other classes to access the main activity context.
-     * @return The MainActivity that was last created
-     */
-    public static MainActivity getCurrent() {
-        return mainActivity;
-    }
-
-    public String getTelephonyManagerId(){
-        TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
-        return tm.getDeviceId();
+    public void init() {
+        Log.i(LOG_TAG, "Initializing Cacophonometer.");
+        RulesArray.clear();
+        RecordingArray.clear();
+        LoadData.loadSettings();
+        LoadData.loadRules();
+        LoadData.loadRecordings();
+        RecordingManager.init(getApplicationContext());
     }
 }

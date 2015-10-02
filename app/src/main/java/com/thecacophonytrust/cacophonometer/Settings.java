@@ -139,7 +139,7 @@ public class Settings {
 	public static long getDeviceId(){
 		//TODO, another form of ID should probably be used.
 		if (deviceId == 0) {
-			deviceId = Long.valueOf(MainActivity.getCurrent().getTelephonyManagerId());
+			deviceId = 1;
 			Log.d(LOG_TAG, "Setting device id using TelephonyManagerId to: \"" +deviceId+ "\"");
 		}
 		return deviceId;
@@ -192,7 +192,6 @@ public class Settings {
 			Log.e(LOG_TAG, e.toString());
 		}
 		JSONFile.saveJSONObject(getSettingsFile().getAbsolutePath(), jo);
-		Toast.makeText(MainActivity.getCurrent().getBaseContext(), "Settings saved", Toast.LENGTH_SHORT).show();
 	}
 
 	public static String getAppVersion(){

@@ -12,7 +12,7 @@ import android.media.MediaRecorder;
 import android.util.Log;
 
 public class Recording{
-	
+
 	private static final String LOG_TAG = "Recording.java";
 	private static int tempId = 0;
 	static MediaRecorder recorder = null;
@@ -26,6 +26,7 @@ public class Recording{
 	 * It stop the recording and saves a new RecordingDataObject and inputs the required variables for the RDO.
 	 * The RecordingDataObject is also added to the list of recordings to be uploaded in RecordingArray.class
 	 */
+	/*
 	public static void stopRecording() {
 		recorder.stop();
 		recording = false;
@@ -45,8 +46,8 @@ public class Recording{
 		rdo.setUploaded(false);
 
 		rdo.setLocation(Settings.getLocation().copy());
-		rdo.setBuildVersion(MainActivity.getBuildVersion());
-		rdo.setPhoneBuild(MainActivity.getPhoneBuild());
+		//rdo.setBuildVersion(MainActivity.getBuildVersion());
+		//rdo.setPhoneBuild(MainActivity.getPhoneBuild());
 
 		//Moving recording to appropriate place
 		File recordingFile = new File(filePath);
@@ -62,12 +63,14 @@ public class Recording{
 		} else 
 			Log.e(LOG_TAG, "Recording data object is not valid.");
 	}
+	*/
 
 	/**
 	 * Starts a new recording, saving the file to a temp directory.
 	 * @param rule rule that started recording.
 	 * @return true if recording started successfully, false if not.
 	 */
+	/*
 	public static boolean startRecord(Rule rule) {
 		Recording.rule = rule;
 		tempId += 1;
@@ -94,6 +97,7 @@ public class Recording{
 		
 		return true;
 	}
+	*/
 
 	/**
 	 * Returns true if device is recording and false if not.
@@ -112,4 +116,5 @@ public class Recording{
 	public static RecordingDataObject getLastRecordingDataObject(){
 		return lastRDO;
 	}
+
 }

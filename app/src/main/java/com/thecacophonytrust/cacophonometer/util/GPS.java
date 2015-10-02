@@ -19,6 +19,7 @@ public class GPS implements LocationListener {
 
     static LocationManager locationManager;
     static SettingsActivity settingsActivity;
+    static Context context = null;
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){
@@ -32,8 +33,6 @@ public class GPS implements LocationListener {
         double alt = location.getAltitude();
         float acc = location.getAccuracy();
         String str = "Latitude: "+lat+" Longitude: "+lon;
-        Toast.makeText(MainActivity.getCurrent().getApplicationContext(), str, Toast.LENGTH_LONG).show();
-
 
         Settings.getLocation().setLatitude(lat);
         Settings.getLocation().setLongitude(lon);
@@ -65,7 +64,7 @@ public class GPS implements LocationListener {
     public void update(SettingsActivity settingsActivity) {
         GPS.settingsActivity = settingsActivity;
         Log.d(LOG_TAG, "Starting GPS test");
-        locationManager = (LocationManager) MainActivity.getCurrent().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         Criteria c = new Criteria();
         c.setAccuracy(Criteria.ACCURACY_MEDIUM);    //TODO, see radius, pros and cons of different accuracy options.
@@ -75,4 +74,7 @@ public class GPS implements LocationListener {
         Log.d(LOG_TAG, "sent GPS request");
     }
 
+    public static void init(Context context){
+        GPS.context = context;
+    }
 }

@@ -22,6 +22,7 @@ import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.recording.RecordingUploadManager;
 import com.thecacophonytrust.cacophonometer.rules.Rule;
 import com.thecacophonytrust.cacophonometer.rules.RulesArray;
+import com.thecacophonytrust.cacophonometer.util.Update;
 
 public class RulesMenuActivity extends ActionBarActivity {
 
@@ -41,8 +42,7 @@ public class RulesMenuActivity extends ActionBarActivity {
 		updateRules();
 		Log.d(LOG_TAG, "Resuming main activity");
 		RecordingUploadManager.update();
-		MainActivity.getCurrent().onResume();
-
+		Update.now();
 		super.onResume();
 	}
 

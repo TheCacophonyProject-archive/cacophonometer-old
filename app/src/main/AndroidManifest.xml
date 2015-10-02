@@ -18,8 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <receiver android:name=".recording.RecordingAlarm"/>
-
+        <service android:name=".util.AudioCaptureService"/>
 
         <activity
             android:name=".activity.MainActivity"
