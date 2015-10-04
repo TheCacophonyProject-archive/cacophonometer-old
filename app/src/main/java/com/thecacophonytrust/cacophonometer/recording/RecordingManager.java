@@ -11,6 +11,10 @@ import com.thecacophonytrust.cacophonometer.rules.Rule;
 import com.thecacophonytrust.cacophonometer.rules.RulesArray;
 import com.thecacophonytrust.cacophonometer.util.AudioCaptureService;
 import com.thecacophonytrust.cacophonometer.util.JSONFile;
+import com.thecacophonytrust.cacophonometer.util.JSONMetadata;
+import com.thecacophonytrust.cacophonometer.util.Update;
+
+import org.json.JSONObject;
 
 /**
  * This class manages the recording process.
@@ -62,14 +66,20 @@ public class RecordingManager {
      * @param error boolean of if there was an error or not.
      */
     public static void recordingFinished(RecordingDataObject rdo, boolean error){
-        if (error){
+        if (error) {
             Log.e(LOG_TAG, "There was an error with a recording.");
-        } else {
-            RecordingUploadManager.addRDO(rdo);
-            JSONFile.saveJSONObject(Settings.getRecordingsFolder() + "/" + rdo.getJSONFileName(), rdo.asJSONObject());
+            //TODO delete recording if there is one
+        //} else if (rdo.locationNotSet()){
+        //    Log.d(LOG_TAG, "Recording data object doesn't have a location yet.");
+        } else if (!rdo.isValid()){
+            Log.e(LOG_TAG, "RecordingDataObject is not valid");
+            //TODO delete recording if there is one
             lastRdo = rdo;
+        } else {
+            JSONObject rdoJSON = rdo.exportAsJSONObject();
+            JSONMetadata.addRecording(rdoJSON);
+            Update.now();
         }
-        update();
         AudioCaptureService.releaseWakeLock();
     }
 

@@ -40,6 +40,7 @@ public class RecordingUploadManager {
 	 * @return if recording was added successfuly
 	 */
 	public static boolean addRDO(RecordingDataObject rdo){
+        /*
 		boolean result = false;
 		Log.d(LOG_TAG, "Adding a RDO to upload: " + rdo.toString());
 		
@@ -68,6 +69,8 @@ public class RecordingUploadManager {
 			result = true;
 		}
 		return result;
+		*/
+        return true;
 	}
 
 	/**
@@ -103,12 +106,14 @@ public class RecordingUploadManager {
 
 		//For each upload that was successful: Remove from RDO Map, update RecordingArray, update RDO.
 		for (RecordingDataObject rdo : rdoSuccess){
+            /*
 			rdoMap.remove(rdo);
 			RecordingArray.addUploadedRecording(rdo);
 			RecordingArray.removeUploadingRecording(rdo);
 			Log.i(LOG_TAG, "Recording (" + rdo.toString() + ") was uploaded");	//TODO make a shorter toString option for the RDO.
 			rdo.setUploaded(true);
 			JSONFile.saveJSONObject(Settings.getRecordingsFolder()+"/"+rdo.getJSONFileName(), rdo.asJSONObject());
+			*/
 		}
 
 		//For each upload that wasn't successful: Remove from RDO Map, update RecordingArray.

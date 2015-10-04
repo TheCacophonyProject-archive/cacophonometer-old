@@ -2,6 +2,7 @@ package com.thecacophonytrust.cacophonometer.util;
 
 import android.util.Log;
 
+import com.thecacophonytrust.cacophonometer.http.UploadManager;
 import com.thecacophonytrust.cacophonometer.recording.RecordingManager;
 
 public class Update {
@@ -10,5 +11,6 @@ public class Update {
     public static void now(){
         Log.i(LOG_TAG, "Updating device.");
         RecordingManager.update();
+        UploadManager.update();
     }
 }

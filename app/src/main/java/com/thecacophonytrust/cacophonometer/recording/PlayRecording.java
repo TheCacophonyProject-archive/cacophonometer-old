@@ -34,6 +34,7 @@ public class PlayRecording {
 	 * @return true if recording was found and started playing.
 	 */
 	public static boolean play(RecordingDataObject rdo, Context context){
+        /*
 		File recording = new File(rdo.getRecordingFilePath());
 		
 		if (!recording.exists() || recording.isDirectory()){
@@ -64,6 +65,7 @@ public class PlayRecording {
 			Log.e(LOG_TAG, e.toString());
 			return false;
 		}
+		*/
 		return true;
 	}
 

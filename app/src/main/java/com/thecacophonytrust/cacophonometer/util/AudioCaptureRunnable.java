@@ -16,6 +16,8 @@ public class AudioCaptureRunnable implements Runnable{
 
     private static final String LOG_TAG = "AudioCaptureRunnab.java";
 
+    private static String FILE_EXTENSION = "3gp";
+
     private Rule rule = null;
     private MediaRecorder mRecorder = null;
     private RecordingDataObject rdo = null;
@@ -51,12 +53,9 @@ public class AudioCaptureRunnable implements Runnable{
         return finished;
     }
 
-
-
     public void setRule(Rule rule) {
         this.rule = rule;
     }
-
 
     private void prepareMediaRecorder() throws IOException {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -70,11 +69,8 @@ public class AudioCaptureRunnable implements Runnable{
         if (rule == null){
             Log.e(LOG_TAG, "Rule is null.");
         }
-        rdo = new RecordingDataObject(rule.getName());
-        rdo.setUtc(System.currentTimeMillis());
-        rdo.setDeviceId(Settings.getDeviceId());
-        rdo.setDuration(rule.getDuration());
-        rdo.setUploaded(false);
-        rdo.setLocation(Settings.getLocation().copy());
+        rdo = new RecordingDataObject(rule.getName(), Settings.getDeviceId(), rule.getDuration(), System.currentTimeMillis(), 0, FILE_EXTENSION);
+        rdo.setHardwareKey(JSONMetadata.getCurrentHardwareKey());
+        rdo.setSoftwareKey(JSONMetadata.getCurrentSoftwareKey());
     }
 }

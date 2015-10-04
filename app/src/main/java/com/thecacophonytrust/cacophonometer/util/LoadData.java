@@ -37,6 +37,7 @@ public class LoadData {
 	 * Gets all the JSON files in the recordings folder and uses them to make new Recording Data Objects.
 	 */
 	public static void loadRecordings() {
+        /*
 		Log.i(LOG_TAG, "Loading recording.....");
 		File recordingJSONFiles[] = Settings.getRecordingsFolder().listFiles(fileFilter(FileFilterType.JSON));
 		if (recordingJSONFiles == null){
@@ -57,6 +58,7 @@ public class LoadData {
 			}
 		}
 		Log.i(LOG_TAG, "Finished loading recording, "+recordingCount+" found.");
+		*/
 	}
 
 

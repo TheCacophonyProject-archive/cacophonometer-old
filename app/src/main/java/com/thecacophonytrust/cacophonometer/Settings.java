@@ -28,7 +28,7 @@ public class Settings {
 	private static File recordingFolder = null;
 	private static File settingsFile = null;
 	private static File rulesFolder = null;
-	private static long deviceId = 0;
+	private static int deviceId = 0;
 
 	private static final String DEFAULT_URL = "http://192.168.0.11:3000";
 	private static final String DEFAULT_UPLOAD_PARAM = "/upload";
@@ -136,7 +136,7 @@ public class Settings {
      * If deviceID equals zero then it sets the device ID using the getTelephonyManagerId() method.
      * @return device ID
      */
-	public static long getDeviceId(){
+	public static int getDeviceId(){
 		//TODO, another form of ID should probably be used.
 		if (deviceId == 0) {
 			deviceId = 1;

@@ -12,9 +12,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class JSONMetadata {
     private static final String LOG_TAG = "JSONMetadata.java";
@@ -22,6 +26,9 @@ public class JSONMetadata {
     private static final String HARDWARE_FOLDER_NAME = "hardware";
     private static final String SOFTWARE_FOLDER_NAME = "software";
     private static final String LOCATION_FOLDER_NAME = "location";
+    private static final String RECORDING_JSON_FOLDER_NAME = "recordingJson";
+
+    private static Random random = new Random();
 
     //These Maps have the JSONMetadata objects of the hardware, software and location.
     //The Key of these maps are the local id for the JSONMetadata object and not the id that is used by the database/uploadServer.
@@ -30,6 +37,31 @@ public class JSONMetadata {
     private static Map<Integer, JSONObject> hardwareJsonMap = new HashMap<>();
     private static Map<Integer, JSONObject> softwareJsonMap = new HashMap<>();
     private static Map<Integer, JSONObject> locationJsonMap = new HashMap<>();
+
+    private static Map<Integer, JSONObject> recordingJSONMap = new HashMap<>();
+
+    public static int getARecordingKey(){
+        if (recordingJSONMap.isEmpty())
+            return 0;
+        else {
+            return (int) recordingJSONMap.keySet().toArray()[0];
+        }
+    }
+
+    public static JSONObject getRecording(int recordingKey){
+        if (recordingJSONMap.containsKey(recordingKey))
+            return recordingJSONMap.get(recordingKey);
+        else {
+            Log.e(LOG_TAG, "A recording was requested that is not in the recordings JSON map.");
+            return null;
+        }
+    }
+
+    public static int addRecording(JSONObject recordingJSON){
+        int key = putNewJsonInMap(recordingJSON, recordingJSONMap);
+        saveJsonObject(new File(Settings.getHomeFile(), RECORDING_JSON_FOLDER_NAME + key), recordingJSON);
+        return key;
+    }
 
     /**
      * Used to give a hardware json object a id. This is the id returned by the server.
@@ -161,6 +193,24 @@ public class JSONMetadata {
      * @return location json object
      */
     public static JSONObject getLocation(int locationKey){
+        if (locationKey == 0) {
+            try {
+                JSONObject jo = new JSONObject();
+                jo.put("longitude", 123);
+                jo.put("latitude", 123);
+                jo.put("utc", 123);
+                jo.put("altitude", 123);
+                jo.put("accuracy", 123);
+                jo.put("userLocationInput", "Up a Tree");
+                return jo;
+            } catch (JSONException e) {
+                //TODO use actual location,
+                Log.i(LOG_TAG, "Using test location");
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                Log.e(LOG_TAG, sw.toString());
+            }
+        }
         return locationJsonMap.get(locationKey);
     }
 
@@ -184,7 +234,9 @@ public class JSONMetadata {
         } catch (Exception e){
             //TODO deal with exceptions
             Log.e(LOG_TAG, "Error whe saving json object to file");
-            Log.e(LOG_TAG, e.toString());
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            Log.e(LOG_TAG, sw.toString());
         }
     }
 
@@ -214,8 +266,10 @@ public class JSONMetadata {
             String jsonString = new String(buffer, "UTF-8");
             jo = new JSONObject(jsonString);
         } catch (Exception e){
-            //TODO deal with exceptions
-            Log.e(LOG_TAG, e.toString());
+            Log.e(LOG_TAG, "Error with loading json from file.");
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            Log.e(LOG_TAG, sw.toString());
         }
         return jo;
     }
@@ -236,17 +290,19 @@ public class JSONMetadata {
      * If the current hardware state matched another one saved then that key for that hardware is returned.
      * @return key of hardware json object
      */
-    public static int getCurrentHardwareId(){
+    public static int getCurrentHardwareKey(){
         JSONObject currentHardware = new JSONObject();
         try{
-            currentHardware.put("model", Build.VERSION.CODENAME);
-            currentHardware.put("manufacturer", Build.VERSION.INCREMENTAL);
-            currentHardware.put("brand", Build.VERSION.SDK_INT);
+            currentHardware.put("model", Build.MODEL);
+            currentHardware.put("manufacturer", Build.MANUFACTURER);
+            currentHardware.put("brand", Build.BRAND);
             currentHardware.put("microphoneId", Settings.getMicrophoneId());
 
-        } catch (Exception e){
+        } catch (JSONException e){
             Log.e(LOG_TAG, "Error with getting phone hardware data");
-            Log.e(LOG_TAG, e.getMessage());
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            Log.e(LOG_TAG, sw.toString());
         }
         //Comparing against previous software states
         int key = findEquivalentFromMap(currentHardware, hardwareJsonMap);  //Returnes 0 if no json objects in the Map match the inputted one
@@ -265,17 +321,19 @@ public class JSONMetadata {
      * If the current hardware state matched another one saved then that key for that hardware is returned.
      * @return key of hardware json object
      */
-    public static int getCurrentSoftwareId(){
+    public static int getCurrentSoftwareKey(){
         JSONObject currentSoftware = new JSONObject();
         try{
-            currentSoftware.put("os_codename", Build.VERSION.CODENAME);
-            currentSoftware.put("os_incremental", Build.VERSION.INCREMENTAL);
+            currentSoftware.put("osCodename", Build.VERSION.CODENAME);
+            currentSoftware.put("osIncremental", Build.VERSION.INCREMENTAL);
             currentSoftware.put("sdkInt", Build.VERSION.SDK_INT);
-            currentSoftware.put("os_release", Build.VERSION.RELEASE);
-            currentSoftware.put("app_version", Settings.getAppVersion());
-        } catch (Exception e){
+            currentSoftware.put("osRelease", Build.VERSION.RELEASE);
+            currentSoftware.put("appVersion", Settings.getAppVersion());
+        } catch (JSONException e){
             Log.e(LOG_TAG, "Error with getting phone Software data.");
-            Log.e(LOG_TAG, e.getMessage());
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            Log.e(LOG_TAG, sw.toString());
         }
         //Comparing against previous software states
         int key = findEquivalentFromMap(currentSoftware, softwareJsonMap);  //Returnes 0 if no json objects in the Map match the inputted one

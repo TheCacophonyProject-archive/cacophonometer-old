@@ -26,7 +26,6 @@ import com.thecacophonytrust.cacophonometer.util.Update;
 public class MainActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = "MainActivity.java";
-    private static MainActivity mainActivity; // Holds the most recent Main activity
 
     @Override
     public void onBackPressed() {
@@ -37,10 +36,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "MainActivity created.");
-        mainActivity = this;    //Saving this activity statically so can be accessed outside by other classes
-
         init();
-
 
         setContentView(R.layout.activity_main);
     }
