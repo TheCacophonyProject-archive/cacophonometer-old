@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
 import com.thecacophonytrust.cacophonometer.recording.RecordingManager;
+import com.thecacophonytrust.cacophonometer.util.GPS;
 import com.thecacophonytrust.cacophonometer.util.LoadData;
 import com.thecacophonytrust.cacophonometer.recording.PlayRecording;
 import com.thecacophonytrust.cacophonometer.R;
@@ -147,5 +148,6 @@ public class MainActivity extends ActionBarActivity {
         LoadData.loadRules();
         LoadData.loadRecordings();
         RecordingManager.init(getApplicationContext());
+        GPS.init(getApplicationContext());
     }
 }
