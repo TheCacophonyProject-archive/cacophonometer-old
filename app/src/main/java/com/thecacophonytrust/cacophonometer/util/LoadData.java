@@ -2,15 +2,14 @@ package com.thecacophonytrust.cacophonometer.util;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.thecacophonytrust.cacophonometer.Settings;
-import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
-import com.thecacophonytrust.cacophonometer.recording.RecordingDataObject;
-import android.util.Log;
 
 import com.thecacophonytrust.cacophonometer.enums.FileFilterType;
-import com.thecacophonytrust.cacophonometer.rules.Rule;
-import com.thecacophonytrust.cacophonometer.rules.RulesArray;
+
+import org.json.JSONObject;
 
 public class LoadData {
 
@@ -26,64 +25,40 @@ public class LoadData {
 	public static void loadSettings(){
 		File settingFile = Settings.getSettingsFile();
 		if (!settingFile.isFile()) {
-			Log.d(LOG_TAG, "Settings file was not found at: " + settingFile.getAbsolutePath());
+			Logger.d(LOG_TAG, "Settings file was not found at: " + settingFile.getAbsolutePath());
 		} else {
-			Settings.setFromJSON(JSONFile.getJSON(settingFile.getAbsolutePath()));
+			Settings.setFromJSON(JsonFile.getJSON(settingFile.getAbsolutePath()));
 		}
 	}
 
-	/**
-	 * Loads the recordings.
-	 * Gets all the JSON files in the recordings folder and uses them to make new Recording Data Objects.
-	 */
-	public static void loadRecordings() {
-        /*
-		Log.i(LOG_TAG, "Loading recording.....");
-		File recordingJSONFiles[] = Settings.getRecordingsFolder().listFiles(fileFilter(FileFilterType.JSON));
-		if (recordingJSONFiles == null){
-			Log.i(LOG_TAG, "No recordings found.");
-			return;
-		}
-		int recordingCount = 0;
-		for (File f : recordingJSONFiles) {
-			RecordingDataObject rdo = new RecordingDataObject(JSONFile.getJSON(f.toString()));	//Makes new RDO using JSON file
-			Log.v(LOG_TAG, "New RDO: " + rdo.toString());
-
-			if (rdo.isValidRecording()) {
-				if (rdo.isUploaded())
-					RecordingArray.addUploadedRecording(rdo);
-				else
-					RecordingArray.addToUpload(rdo);
-				recordingCount += 1;
+    public static Map<Integer, JSONObject> getResources(String folderName) {
+        Logger.i(LOG_TAG, "Loading resources from folder '"+ folderName + "'" );
+        Map<Integer, JSONObject> resources = new HashMap<>();
+        File f = new File(Settings.getHomeFile(), folderName);
+        if (!f.exists()) {
+            Logger.d(LOG_TAG, "Folder " + folderName + " was not found.");
+            return resources;
+        }
+        File resourcesJsonFiles[] = f.listFiles(fileFilter(FileFilterType.JSON));
+        if (resourcesJsonFiles == null) {
+            Logger.i(LOG_TAG, "No JSON resources found in " + f.getAbsolutePath());
+            return resources;
+        }
+        for (File jsonFile : resourcesJsonFiles) {
+            JSONObject json = JsonFile.getJSON(jsonFile.getAbsolutePath());
+			int key = 0;
+			String name = jsonFile.getName();
+			try {
+				key = Integer.valueOf(name.replace(".json", ""));
+			} catch (Exception e) {
+				Logger.e(LOG_TAG, "Error with parsing file name " + name);
+				Logger.exception(LOG_TAG, e);
 			}
-		}
-		Log.i(LOG_TAG, "Finished loading recording, "+recordingCount+" found.");
-		*/
-	}
-
-
-	/**
-	 * Goes through the folder that contains the rules .txt files.
-	 * For each text file it parses it and saves a new rule then puts the rule in the RulesArray.class
-	 */
-	public static void loadRules() {
-		Log.i(LOG_TAG, "Loading rules.....");
-		File rules[] = Settings.getRulesFolder().listFiles(fileFilter(FileFilterType.JSON));
-		if (rules == null) {
-			Log.i(LOG_TAG, "No rules found.");
-			return;
-		}
-		Rule r;
-		for (File f : rules) {
-			r = new Rule(JSONFile.getJSON(f.toString()));
-			if (r.isValid())
-				RulesArray.addRule(r);
-			else 
-				Log.d(LOG_TAG, "Invalid rule found at '"+f.toString()+"'");
-		}
-		Log.i(LOG_TAG, "Finished loading rules.");
-		RulesArray.printRules();
-	}
+			Logger.i(LOG_TAG, Integer.toString(key));
+			if (key != 0) resources.put(key, json);
+        }
+        return resources;
+    }
 
 	/**
 	 * Returns a FileFilter that filters out file that are not of the set file type.
@@ -117,11 +92,11 @@ public class LoadData {
 			return new FileFilter() {
 				@Override
 				public boolean accept(File pathname) {
-					return ((pathname.getName().endsWith(".JSONMetadata")) && !pathname.isDirectory());
+					return ((pathname.getName().endsWith(".json")) && !pathname.isDirectory());
 				}
 			};
 		default:
-			Log.e(LOG_TAG, "File filter of type has not been set, type: " + type);
+			Logger.e(LOG_TAG, "File filter of type has not been set, type: " + type);
 			return null;
 		}
 	}

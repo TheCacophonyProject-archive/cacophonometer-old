@@ -48,5 +48,16 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:text="Last recording" />
-    
+    <Button
+        android:id="@+id/testCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="testCode"
+        android:text="Test Code" />
+
+
 </LinearLayout>

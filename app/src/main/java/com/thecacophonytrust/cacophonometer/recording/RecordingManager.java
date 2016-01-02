@@ -4,17 +4,11 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.thecacophonytrust.cacophonometer.Settings;
-import com.thecacophonytrust.cacophonometer.rules.Rule;
-import com.thecacophonytrust.cacophonometer.rules.RulesArray;
-import com.thecacophonytrust.cacophonometer.util.AudioCaptureService;
-import com.thecacophonytrust.cacophonometer.util.JSONFile;
-import com.thecacophonytrust.cacophonometer.util.JSONMetadata;
-import com.thecacophonytrust.cacophonometer.util.Update;
+import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.util.Logger;
 
-import org.json.JSONObject;
+import java.util.Calendar;
 
 /**
  * This class manages the recording process.
@@ -26,19 +20,19 @@ public class RecordingManager {
     private static final String LOG_TAG = "RecordingManager.java";
 
     private static boolean initialized = false;
-    private static Rule nextRuleToRecord = null;
-    private static long recordingStartTime = 0;
+    private static int nextRuleKey = 0;
+    private static Calendar startTime = null;
+    private static Calendar startTimeCalendar = null;
     private static Context context = null;
     private static AlarmManager am = null;
     private static PendingIntent pi = null;
-    private static RecordingDataObject lastRdo = null;
-    private static boolean recordingNow = false;
+    private static boolean recording = false;
 
     /**
      * This updated the recording manager. Checks that the correct alarm and rule is set.
      */
     public static void update(){
-        Log.d(LOG_TAG, "Updating RecordingManager");
+        Logger.d(LOG_TAG, "Updating RecordingManager");
         if (needToUpdateRecordingAlarm()){
             updateRecordingAlarm();
         }
@@ -50,83 +44,81 @@ public class RecordingManager {
      */
     public static void init(Context context){
         if (initialized){
-            Log.e(LOG_TAG, "Calling init on RecordingManager when is has already been initialized.");
+            Logger.e(LOG_TAG, "Calling init on RecordingManager when is has already been initialized.");
             return;
         }
         RecordingManager.context = context;
         initialized = true;
-        Log.i(LOG_TAG, "Initializing RecordingManager.");
+        Logger.i(LOG_TAG, "Initializing RecordingManager.");
         am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         update();
     }
 
-    /**
-     * This is called by the AudioCaptureRunnable when the recording is complete.
-     * @param rdo the RecordingDataObject of the finished recording.
-     * @param error boolean of if there was an error or not.
-     */
-    public static void recordingFinished(RecordingDataObject rdo, boolean error){
-        if (error) {
-            Log.e(LOG_TAG, "There was an error with a recording.");
-            //TODO delete recording if there is one
-        //} else if (rdo.locationNotSet()){
-        //    Log.d(LOG_TAG, "Recording data object doesn't have a location yet.");
-        } else if (!rdo.isValid()){
-            Log.e(LOG_TAG, "RecordingDataObject is not valid");
-            //TODO delete recording if there is one
-            lastRdo = rdo;
-        } else {
-            JSONObject rdoJSON = rdo.exportAsJSONObject();
-            JSONMetadata.addRecording(rdoJSON);
-            Update.now();
-        }
-        AudioCaptureService.releaseWakeLock();
+    public static void setRecording(boolean recording) {
+        RecordingManager.recording = recording;
     }
 
-    public static RecordingDataObject getLastRdo(){
-        return lastRdo;
+    public static boolean isRecording() {
+        return recording;
     }
 
-    public static boolean isRecordingNow() {
-        return recordingNow;
-    }
-
-    public static void setRecordingNow(boolean recordingNow) {
-        RecordingManager.recordingNow = recordingNow;
-    }
-
-    public static long getRecordingStartTime(){
-        return recordingStartTime;
+    public static Calendar getStartTime(){
+        return startTime;
     }
 
     private static boolean needToUpdateRecordingAlarm(){
-        long newRecordingStartTime;
-        Rule newRule = RulesArray.getNextRule();
-        if (newRule == null){
-            return false;
-        }
-        newRecordingStartTime = newRule.nextRecordingTime().getTimeInMillis();
-        if (newRule != nextRuleToRecord || newRecordingStartTime != recordingStartTime){
-            nextRuleToRecord = newRule;
-            recordingStartTime = newRecordingStartTime;
-            Log.v(LOG_TAG, "Recording alarm didn't need updating.");
-            return true;
+        Logger.i(LOG_TAG, "Checking if Recording alarm needs updating.");
+        Calendar now = Calendar.getInstance();
+        int newNextRuleKey = Rule.getNextRuleKey();
+        boolean result;
+        if (nextRuleKey != newNextRuleKey) {
+            Logger.d(LOG_TAG, "nextRuleKey does not equal Rule.getNextRuleKey.");
+            result = true;
+        } else if (now.after(startTimeCalendar)) {
+            Logger.d(LOG_TAG, "Recording time has passed.");
+            result = true;
+        } else if (Rule.getFromKey(nextRuleKey) == null && nextRuleKey != 0) {
+            Logger.d(LOG_TAG, "Next rule key was not found.");
+            result = true;
         } else {
-            Log.v(LOG_TAG, "Recording alarm needs updating.");
-            return false;
+            if (newNextRuleKey == 0) return false;
+            Calendar newStartTime = Rule.getRuleDO(newNextRuleKey).nextRecordingTime();
+            if (newStartTime.equals(startTimeCalendar)) {
+                Logger.d(LOG_TAG, "New start time equals saved start time.");
+                result = false;
+            } else {
+                Logger.d(LOG_TAG, "New start time does not equal saved start time.");
+                result = true;
+            }
         }
+        if (result) {
+            Logger.i(LOG_TAG, "Recording alarm needs updating.");
+        } else {
+            Logger.i(LOG_TAG, "Recording alarm does not need updating.");
+        }
+        return result;
     }
 
     private static void updateRecordingAlarm(){
-        Log.i(LOG_TAG, "Updating recording alarm.");
+        Logger.i(LOG_TAG, "Updating recording alarm.");
+        nextRuleKey = Rule.getNextRuleKey();
+        if (nextRuleKey == 0) {
+            Logger.d(LOG_TAG, "No rule found for recording. Canceling alarm.");
+            am.cancel(pi);
+            return;
+        }
         if (pi != null) {
             am.cancel(pi);
             pi = null;
         }
-        Log.d(LOG_TAG, "Setting start recording alarm for rule " + nextRuleToRecord);
+        startTime = Rule.getRuleDO(nextRuleKey).nextRecordingTime();
+        Calendar now = Calendar.getInstance();
+        long secondsToRecording = (startTime.getTimeInMillis() - now.getTimeInMillis())/1000;
+        Logger.d(LOG_TAG, "Seconds to recording: " + secondsToRecording);
+        Logger.d(LOG_TAG, "Setting start recording alarm for rule " + nextRuleKey);
         Intent intent = new Intent(context, AudioCaptureService.class);
         pi = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        am.set(AlarmManager.RTC_WAKEUP, recordingStartTime, pi);
-        AudioCaptureService.setRule(nextRuleToRecord);
+        am.set(AlarmManager.RTC_WAKEUP, startTime.getTimeInMillis(), pi);
+        AudioCaptureService.setRule(nextRuleKey);
     }
 }

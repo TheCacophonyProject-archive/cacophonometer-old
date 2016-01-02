@@ -1,12 +1,14 @@
-package com.thecacophonytrust.cacophonometer.util;
+package com.thecacophonytrust.cacophonometer.recording;
 
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
-import android.util.Log;
+import android.widget.Toast;
 
-import com.thecacophonytrust.cacophonometer.rules.Rule;
+import com.thecacophonytrust.cacophonometer.activity.MainActivity;
+import com.thecacophonytrust.cacophonometer.util.Logger;
+import com.thecacophonytrust.cacophonometer.util.ThreadExecutor;
 
 public class AudioCaptureService extends IntentService{
     private static final String LOG_TAG = "AudioCaptureServic.java";
@@ -17,8 +19,7 @@ public class AudioCaptureService extends IntentService{
     private static ThreadExecutor threadExecutor = new ThreadExecutor();
     private static final String PM_TAG = "AudioCaptureServiceWakeLock";
     private static AudioCaptureRunnable acr = null;
-    private static Rule rule = null;
-
+    private static int rule = 0;
 
     public AudioCaptureService() {
         super("AudioCaptureService");
@@ -33,20 +34,26 @@ public class AudioCaptureService extends IntentService{
 
         //check that previous AudioCaptureRunnable finished
         if (acr != null && !acr.isFinished()){
-            Log.e(LOG_TAG, "A previous AudioCaptureRunnable had not called the AudioCaptureFinished yet.");
+            Logger.e(LOG_TAG, "A previous AudioCaptureRunnable had not called the AudioCaptureFinished yet.");
             wl.release();
             return;
         }
         acr = new AudioCaptureRunnable();
-        acr.setRule(rule);
+        acr.setRuleKey(rule);
+        Toast.makeText(MainActivity.getContext(), "Starting audio capture.", Toast.LENGTH_SHORT).show();
         threadExecutor.execute(acr);
     }
 
-    public static void releaseWakeLock(){
+    public static void finishedAudioCapture(boolean error) {
+        Logger.d(LOG_TAG, "Releasing WL");
         wl.release();
+        if (error)
+            Toast.makeText(MainActivity.getContext(), "Error with audio capture.", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(MainActivity.getContext(), "Finished audio capture.", Toast.LENGTH_SHORT).show();
     }
 
-    public static void setRule(Rule rule){
+    public static void setRule(int rule){
         AudioCaptureService.rule = rule;
     }
 }

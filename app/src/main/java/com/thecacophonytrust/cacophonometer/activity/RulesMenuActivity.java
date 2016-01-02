@@ -8,8 +8,7 @@ import java.util.Map;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,16 +18,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.recording.RecordingUploadManager;
-import com.thecacophonytrust.cacophonometer.rules.Rule;
-import com.thecacophonytrust.cacophonometer.rules.RulesArray;
+import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.Update;
 
-public class RulesMenuActivity extends ActionBarActivity {
+public class RulesMenuActivity extends AppCompatActivity {
 
 	private static final String LOG_TAG = "RulesMenuActivity.java";
 	
-	private List<Rule> ruleList;
+	private List<Integer> ruleKeyList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +38,7 @@ public class RulesMenuActivity extends ActionBarActivity {
 	@Override
 	public void onResume() {
 		updateRules();
-		Log.d(LOG_TAG, "Resuming main activity");
-		RecordingUploadManager.update();
+		Logger.d(LOG_TAG, "Resuming main activity");
 		Update.now();
 		super.onResume();
 	}
@@ -65,21 +62,20 @@ public class RulesMenuActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void openRule(int ruleId) {
+	private void newRule() {
 		Intent intent = new Intent(this, NewRuleActivity.class);
-		intent.putExtra("ruleId", ruleId);
 		startActivity(intent);
 	}
 
 	public void updateRules() {
 		ListView lv = (ListView) findViewById(R.id.listView1);
 		ArrayList<String> list = new ArrayList<>();
-		Map<String, Rule> ruleMap = RulesArray.getRules();
-		ruleList = new ArrayList<>();
+		Map<Integer, Rule.DataObject> ruleMap = Rule.getRuleDOMap();
+		ruleKeyList = new ArrayList<>();
 		
-		for (String key : ruleMap.keySet()) {
-			list.add(ruleMap.get(key).toString());
-			ruleList.add(ruleMap.get(key));
+		for (int key : ruleMap.keySet()) {
+			list.add(ruleMap.get(key).getName());
+			ruleKeyList.add(key);
 		}
 		final StableArrayAdapter adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list);
 		lv.setAdapter(adapter);
@@ -87,23 +83,24 @@ public class RulesMenuActivity extends ActionBarActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.d(LOG_TAG, "Getting rule at postition " + position);
+				Logger.d(LOG_TAG, "Getting rule at position " + position);
 				startRuleActivity(position);
 			}
 		});
 	}
 
 	public void startRuleActivity(int position) {
-		Log.d(LOG_TAG, ruleList.toString());
-		Rule r = ruleList.get(position);
-		Log.d(LOG_TAG, "Rule: " + r.toString());
+		Logger.d(LOG_TAG, ruleKeyList.toString());
+		int ruleKey = ruleKeyList.get(position);
+		//Logger.d(LOG_TAG, "Rule.DataObject: " + r.toString());
 		Intent i = new Intent(this, ViewRuleActivity.class);
-		i.setAction(r.getName());
+		i.putExtra("RULE_KEY", ruleKey);
+		//i.setAction(ruleKey);
 		startActivity(i);
 	}
 
 	public void newRule(View v) {
-		openRule(-1);
+		newRule();
 	}
 
 	private class StableArrayAdapter extends ArrayAdapter<String> {

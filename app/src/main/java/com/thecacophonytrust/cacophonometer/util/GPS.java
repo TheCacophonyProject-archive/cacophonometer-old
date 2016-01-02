@@ -2,16 +2,21 @@ package com.thecacophonytrust.cacophonometer.util;
 
 import android.content.Context;
 import android.location.Criteria;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.thecacophonytrust.cacophonometer.Settings;
-import com.thecacophonytrust.cacophonometer.activity.MainActivity;
 import com.thecacophonytrust.cacophonometer.activity.SettingsActivity;
+import com.thecacophonytrust.cacophonometer.resources.Location;
+import com.thecacophonytrust.cacophonometer.resources.ResourcesUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
 
 public class GPS implements LocationListener {
 
@@ -23,38 +28,47 @@ public class GPS implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras){
-        Log.d(LOG_TAG, "GPS status changed.");
+        Logger.d(LOG_TAG, "GPS status changed.");
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(android.location.Location location) {
+        Toast.makeText(context, "Location change", Toast.LENGTH_SHORT).show();
         double lat = location.getLatitude();
         double lon = location.getLongitude();
         double alt = location.getAltitude();
         float acc = location.getAccuracy();
         String str = "Latitude: "+lat+" Longitude: "+lon;
 
-        Settings.getLocation().setLatitude(lat);
-        Settings.getLocation().setLongitude(lon);
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("latitude", lat);
+            jo.put("longitude", lon);
+            jo.put("altitude", alt);
+            jo.put("accuracy", acc);
+            jo.put("timestamp", ResourcesUtil.iso8601.format(new Date(location.getTime())));
 
-        Settings.getLocation().setAccuracy(acc);
-        Settings.getLocation().setGPSLocationTime(location.getTime());
+        } catch (JSONException e) {
+            Logger.e(LOG_TAG, "Error when making a location json.");
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            Logger.e(LOG_TAG, sw.toString());
+        }
+        Location.addAndSave(jo);
 
-        if (location.hasAltitude())
-            Settings.getLocation().setAltitude(alt);
 
-        Log.d(LOG_TAG, "GPS location changed to " + str);
+        Logger.d(LOG_TAG, "GPS location changed to " + str);
         if (settingsActivity != null) settingsActivity.updateLocationTextField();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        Log.d(LOG_TAG, "GPS turned off");
+        Logger.d(LOG_TAG, "GPS turned off");
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        Log.d(LOG_TAG, "GPS turned on");
+        Logger.d(LOG_TAG, "GPS turned on");
     }
 
     /**
@@ -62,16 +76,15 @@ public class GPS implements LocationListener {
      * @param settingsActivity settingsActivity that text is to be updated on completion of getting the location
      */
     public void update(SettingsActivity settingsActivity) {
-        GPS.settingsActivity = settingsActivity;
-        Log.d(LOG_TAG, "Starting GPS test");
+        if (settingsActivity != null) GPS.settingsActivity = settingsActivity;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         Criteria c = new Criteria();
         c.setAccuracy(Criteria.ACCURACY_MEDIUM);    //TODO, see radius, pros and cons of different accuracy options.
-        Log.d(LOG_TAG, c.toString() + " : " + c.getAccuracy());
         locationManager.requestSingleUpdate(c, this, null);
 
-        Log.d(LOG_TAG, "sent GPS request");
+        Logger.d(LOG_TAG, "Sent GPS request");
+        Toast.makeText(context, "Sent GPS request", Toast.LENGTH_SHORT).show();
     }
 
     public static void init(Context context){

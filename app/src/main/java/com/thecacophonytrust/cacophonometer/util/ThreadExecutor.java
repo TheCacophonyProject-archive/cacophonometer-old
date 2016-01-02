@@ -1,9 +1,5 @@
 package com.thecacophonytrust.cacophonometer.util;
 
-import android.util.Log;
-
-import com.thecacophonytrust.cacophonometer.http.UploadRunnable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

@@ -2,7 +2,7 @@ package com.thecacophonytrust.cacophonometer.activity;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,12 +12,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.rules.Rule;
-import com.thecacophonytrust.cacophonometer.rules.RulesArray;
+import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.util.Logger;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 
-public class NewRuleActivity extends ActionBarActivity {
+public class NewRuleActivity extends AppCompatActivity {
 
 	final static private String LOG_TAG = "NewRuleActivity.java";
 
@@ -42,7 +44,7 @@ public class NewRuleActivity extends ActionBarActivity {
 
 	private void updateSetStartTimeText(){
 		Button startTimeEdit = (Button) findViewById(R.id.new_rule_set_start_time);
-		String s = String.format("%s:%s", hour, minute);
+		String s = String.format("%02d:%02d", hour, minute);
 		startTimeEdit.setText(s);
 	}
 
@@ -69,23 +71,25 @@ public class NewRuleActivity extends ActionBarActivity {
 	 * @param view
 	 */
 	public void saveRule(View view){
-		EditText length = (EditText) findViewById(R.id.length_input);
+		EditText duration = (EditText) findViewById(R.id.length_input);
 		EditText name = (EditText) findViewById(R.id.edit_rule_name);
 
 		if (name.getText().toString().equals("")){
 			Toast.makeText(getApplicationContext(), "Enter name for the rule", Toast.LENGTH_SHORT).show();
-		} else if (length.getText().toString().equals("")){
+		} else if (duration.getText().toString().equals("")){
 			Toast.makeText(getApplicationContext(), "Enter duration of recording", Toast.LENGTH_SHORT).show();
 		} else {
-			Rule rule = new Rule();
-			rule.setName(name.getText().toString());
-			rule.setStartTimeHour(hour);
-			rule.setStartTimeMinute(minute);
-			rule.setDuration(Integer.parseInt(length.getText().toString()));
-			if (rule.isValid()){
-				RulesArray.addRule(rule);
-				rule.saveAsJSON();
-				finish();
+			JSONObject rule = new JSONObject();
+			try {
+				rule.put("name", name.getText().toString());
+				rule.put("startTimestamp", hour+":"+minute);
+				rule.put("duration", Integer.parseInt(duration.getText().toString()));
+				Rule.addAndSave(rule);
+				super.onBackPressed();
+			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(), "Error with saving rule", Toast.LENGTH_SHORT).show();
+				Logger.e(LOG_TAG, "Error with saving rule.");
+				Logger.exception(LOG_TAG, e);
 			}
 		}
 	}

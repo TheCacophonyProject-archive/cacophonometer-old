@@ -4,11 +4,9 @@ import java.io.File;
 
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.thecacophonytrust.cacophonometer.activity.MainActivity;
-import com.thecacophonytrust.cacophonometer.util.JSONFile;
-import com.thecacophonytrust.cacophonometer.util.Location;
+import com.thecacophonytrust.cacophonometer.util.JsonFile;
+import com.thecacophonytrust.cacophonometer.util.Logger;
 
 import org.json.JSONObject;
 
@@ -20,7 +18,6 @@ public class Settings {
 	private static final String LOG_TAG = "Settings.java";
 
 	private static String name = "Cacophonometer";
-	private static Location location = new Location();
 	private static String serverUrl = null;
 	private static String uploadParam = null;
 	private static File homeFile = null;
@@ -30,7 +27,7 @@ public class Settings {
 	private static File rulesFolder = null;
 	private static int deviceId = 0;
 
-	private static final String DEFAULT_URL = "http://192.168.0.11:3000";
+	private static final String DEFAULT_URL = "http://192.168.0.15:8888";
 	private static final String DEFAULT_UPLOAD_PARAM = "/upload";
 	private static final String DEFAULT_TEMP_FOLDER = "temp";
 	private static final String DEFAULT_RULES_FOLDER = "rules";
@@ -64,7 +61,7 @@ public class Settings {
 		if (homeFile == null){
 			homeFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/cacophony");
 			if (!homeFile.exists() && !homeFile.isDirectory() && !homeFile.mkdirs()){
-				Log.e(LOG_TAG, "Unable to write to file");
+				Logger.e(LOG_TAG, "Unable to write to file");
 				//TODO, exit program safely from here and display error.
 			}
 		}
@@ -80,7 +77,7 @@ public class Settings {
 		if (uploadParam != null)
 			return uploadParam;
 		else {
-			Log.d(LOG_TAG, "No set upload parameter found. Using default.");
+			Logger.d(LOG_TAG, "No set upload parameter found. Using default.");
 			return DEFAULT_UPLOAD_PARAM;
 		}
 	}
@@ -93,7 +90,7 @@ public class Settings {
 		if (serverUrl != null){
 			return serverUrl;
 		} else {
-			Log.d(LOG_TAG, "No set server URL found. Using default.");
+			Logger.d(LOG_TAG, "No set server URL found. Using default.");
 			serverUrl = DEFAULT_URL;
 			return serverUrl;
 		}
@@ -108,7 +105,7 @@ public class Settings {
 		if (rulesFolder == null){
 			rulesFolder = new File(getHomeFile(), DEFAULT_RULES_FOLDER);
 			if (!rulesFolder.exists() && !rulesFolder.isDirectory() && !rulesFolder.mkdirs()){
-				Log.e(LOG_TAG, "Unable to write to file");
+				Logger.e(LOG_TAG, "Unable to write to file");
 				//TODO, exit program safely from here and display error.
 			}
 		}
@@ -124,7 +121,7 @@ public class Settings {
 		if (tempFile == null){
 			tempFile = new File(getHomeFile(), DEFAULT_TEMP_FOLDER);
 			if (!tempFile.exists() && !tempFile.isDirectory() && !tempFile.mkdirs()){
-				Log.e(LOG_TAG, "Unable to write to file for temp file");
+				Logger.e(LOG_TAG, "Unable to write to file for temp file");
 				//TODO, exit program safely from here and display error.
 			}
 		}
@@ -140,13 +137,9 @@ public class Settings {
 		//TODO, another form of ID should probably be used.
 		if (deviceId == 0) {
 			deviceId = 1;
-			Log.d(LOG_TAG, "Setting device id using TelephonyManagerId to: \"" +deviceId+ "\"");
+			Logger.d(LOG_TAG, "Setting device id using TelephonyManagerId to: \"" +deviceId+ "\"");
 		}
 		return deviceId;
-	}
-
-	public static Location getLocation(){
-		return location;
 	}
 
 	/**
@@ -157,7 +150,7 @@ public class Settings {
 		if (recordingFolder == null){
 			recordingFolder = new File(getHomeFile(), DEFAULT_RECORDINGS_FOLDER);
 			if (!recordingFolder.exists() && !recordingFolder.isDirectory() && !recordingFolder.mkdirs()){
-				Log.e(LOG_TAG, "Error with the recording Folder");
+				Logger.e(LOG_TAG, "Error with the recording Folder");
 				//TODO try to fix problem and if cant output error message then exit, maybe send error to server.
 			}
 		}
@@ -170,12 +163,11 @@ public class Settings {
 	 */
 	public static void setFromJSON(JSONObject json){
 		try{
-			setServerUrl((String) json.get("SERVER_URL"));
-			JSONObject locationJson = (JSONObject) json.get("LOCATION");
-			location.setFromJson(locationJson);
-			Log.i(LOG_TAG, "Settings were loaded from JSON");
+			setServerUrl((String) json.get("serverUrl"));
+			Logger.i(LOG_TAG, "Settings were loaded from JSON");
 		} catch (Exception e) {
-			Log.e(LOG_TAG, e.toString());
+			Logger.e(LOG_TAG, "Error with setting settings variables from json.");
+			Logger.exception(LOG_TAG, e);
 		}
 	}
 
@@ -186,19 +178,15 @@ public class Settings {
 	public static void saveToFileAsJSON(){
 		JSONObject jo = new JSONObject();
 		try{
-			jo.put("SERVER_URL", getServerUrl());
-			jo.put("LOCATION", getLocation().asJSONObject());
+			jo.put("serverUrl", getServerUrl());
 		} catch (Exception e){
-			Log.e(LOG_TAG, e.toString());
+			Logger.e(LOG_TAG, "Error with making settings json object.");
+			Logger.exception(LOG_TAG, e);
 		}
-		JSONFile.saveJSONObject(getSettingsFile().getAbsolutePath(), jo);
+		JsonFile.saveJSONObject(getSettingsFile().getAbsolutePath(), jo);
 	}
 
 	public static String getAppVersion(){
 		return "TESTING VERSION STILL";
-	}
-
-	public static int getMicrophoneId(){
-		return 1;
 	}
 }

@@ -1,32 +1,33 @@
 package com.thecacophonytrust.cacophonometer.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
+import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.recording.RecordingManager;
+import com.thecacophonytrust.cacophonometer.resources.Hardware;
+import com.thecacophonytrust.cacophonometer.resources.Location;
+import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.resources.Software;
 import com.thecacophonytrust.cacophonometer.util.GPS;
-import com.thecacophonytrust.cacophonometer.util.LoadData;
-import com.thecacophonytrust.cacophonometer.recording.PlayRecording;
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.recording.Recording;
-import com.thecacophonytrust.cacophonometer.recording.RecordingUploadManager;
-import com.thecacophonytrust.cacophonometer.rules.Rule;
-import com.thecacophonytrust.cacophonometer.rules.RulesArray;
-import com.thecacophonytrust.cacophonometer.recording.RecordingDataObject;
+import com.thecacophonytrust.cacophonometer.util.JsonFile;
+import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.Update;
 
-public class MainActivity extends ActionBarActivity {
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MainActivity.java";
+    private static Context context = null;
 
     @Override
     public void onBackPressed() {
@@ -36,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(LOG_TAG, "MainActivity created.");
+        Logger.i(LOG_TAG, "MainActivity created.");
         init();
 
         setContentView(R.layout.activity_main);
@@ -60,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onResume() {
-        Log.d(LOG_TAG, "Resuming main activity");
+        Logger.d(LOG_TAG, "Resuming main activity");
         Update.now();
         updateText();   //Updates the text displayed on the screen for MainActivity
         displayNextRecordingStatus();
@@ -72,17 +73,23 @@ public class MainActivity extends ActionBarActivity {
      */
     private void displayNextRecordingStatus(){
         String text;
-        if (RecordingManager.isRecordingNow())
+        if (RecordingManager.isRecording())
             text = "Device is recording now.";
-        else if (RulesArray.getNextRule() == null)
+        else if (Rule.getNextRuleKey() == 0)
             text = "No rules found for recording";
         else {
             //TODO this could be done better... but works for now.
-            long timeToNextRecording = (RecordingManager.getRecordingStartTime() - System.currentTimeMillis())/1000;
-            int hours = (int) (timeToNextRecording / 3600);
-            int minutes = (int) (timeToNextRecording % 3600) / 60;
-            int seconds = (int) timeToNextRecording % 60;
-            text = String.format("Next recording starts in %02d:%02d:%02d.", hours, minutes, seconds);
+            Calendar timeOfRecording = RecordingManager.getStartTime();
+
+            if (timeOfRecording != null) {
+                long timeToNextRecording = (timeOfRecording.getTimeInMillis() - System.currentTimeMillis())/1000;
+                int hours = (int) (timeToNextRecording / 3600);
+                int minutes = (int) (timeToNextRecording % 3600) / 60;
+                int seconds = (int) timeToNextRecording % 60;
+                text = String.format("Next recording starts in %02d:%02d:%02d.", hours, minutes, seconds);
+            } else {
+                text = "No rules found for recording.";
+            }
         }
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
@@ -91,24 +98,27 @@ public class MainActivity extends ActionBarActivity {
      * Updates the text that is displayed.
      */
     private void updateText() {
-        Rule nextRule = RulesArray.getNextRule();
-        RecordingDataObject lastRDO = Recording.getLastRecordingDataObject();
+        int nextRuleKey = Rule.getNextRuleKey();
         TextView infoTextView = (TextView) findViewById(R.id.info_text);
         TextView lastRecordingTextView = (TextView) findViewById(R.id.last_recording_text);
 
-        if (nextRule == null){
+        if (nextRuleKey == 0){
             infoTextView.setText("No rule found for next recording");
         } else {
-            String time = nextRule.getTimeAsString();
-            String name = nextRule.getName();
-            infoTextView.setText(String.format("Next recording at %s for rule '%s'", time, name));
+            //TODO
+            int hour = Rule.getRuleDO(nextRuleKey).nextRecordingTime().get(Calendar.HOUR_OF_DAY);
+            int minute = Rule.getRuleDO(nextRuleKey).nextRecordingTime().get(Calendar.MINUTE);
+            String name = Rule.getRuleDO(nextRuleKey).name;
+            infoTextView.setText(String.format("Next recording at %02d:%02d for rule '%s'", hour, minute, name));
         }
-
+        //TODO
+/*
         if (lastRDO == null){
             lastRecordingTextView.setText("Last recording not found");
         } else {
             lastRecordingTextView.setText("Last recording from rule '"+lastRDO.getRuleName()+"'");
         }
+        */
     }
 
     /**
@@ -132,22 +142,29 @@ public class MainActivity extends ActionBarActivity {
      * @param v
      */
     public void playLastRecording(View v) {
-        RecordingDataObject rdo = Recording.getLastRecordingDataObject();
-        if (rdo == null) {
-            Toast.makeText(getApplicationContext(), "No recording found from this session", Toast.LENGTH_SHORT).show();
-        } else {
-            PlayRecording.play(rdo, getApplicationContext());
-        }
+        //TODO
     }
 
     public void init() {
-        Log.i(LOG_TAG, "Initializing Cacophonometer.");
-        RulesArray.clear();
-        RecordingArray.clear();
-        LoadData.loadSettings();
-        LoadData.loadRules();
-        LoadData.loadRecordings();
+        Logger.i(LOG_TAG, "Initializing Cacophonometer.");
+        context = getApplicationContext();
+        Settings.setFromJSON(JsonFile.getJSON(Settings.getSettingsFile().getAbsolutePath()));
+        Location.loadFromFile();
+        Hardware.loadFromFile();
+        Software.loadFromFile();
+        Rule.loadFromFile();
         RecordingManager.init(getApplicationContext());
         GPS.init(getApplicationContext());
+        GPS gps = new GPS();
+        gps.update(null);
+        GPS.init(getApplicationContext());
+    }
+
+    public void testCode(View v) {
+        Logger.i(LOG_TAG, "Starting test code");
+    }
+
+    public static Context getContext(){
+        return context;
     }
 }

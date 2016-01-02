@@ -4,20 +4,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.Settings;
+import com.thecacophonytrust.cacophonometer.resources.Location;
 import com.thecacophonytrust.cacophonometer.util.GPS;
-import com.thecacophonytrust.cacophonometer.util.Location;
+import com.thecacophonytrust.cacophonometer.util.Logger;
 
-public class SettingsActivity extends ActionBarActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class SettingsActivity extends AppCompatActivity {
 
 	private static final String LOG_TAG = "SettingsActivity.java";
 	
@@ -57,8 +61,8 @@ public class SettingsActivity extends ActionBarActivity {
 		String serverString = serverIPEditText.getText().toString();
 		String userLocationInput = userLocationInputEditText.getText().toString();
 
-		if (!userLocationInput.equals(""))
-			Settings.getLocation().setUserLocationInput(userLocationInput);
+		//if (!userLocationInput.equals(""))
+			//Settings.getLocation().setUserLocationInput(userLocationInput);
 
 		if (!serverString.equals("")){
 			try {
@@ -66,11 +70,14 @@ public class SettingsActivity extends ActionBarActivity {
 				@SuppressWarnings("unused")
 				URL url = new URL(serverString);
 				Settings.setServerUrl(serverString);
+				Settings.saveToFileAsJSON();
+				Toast.makeText(getApplicationContext(), "Settings updated.", Toast.LENGTH_SHORT).show();
 			} catch (MalformedURLException e){
-				Log.d(LOG_TAG, "Server URL is not valid '"+serverString+"'");
+				Logger.d(LOG_TAG, "Server URL is not valid '" + serverString + "'");
+				Toast.makeText(getApplicationContext(), "Malformed URL for server.", Toast.LENGTH_SHORT).show();
 			}
 		}
-		Settings.saveToFileAsJSON();
+
 	}
 
 	@Override
@@ -86,7 +93,8 @@ public class SettingsActivity extends ActionBarActivity {
 		EditText locationEditText = (EditText) findViewById(R.id.settings_user_location_input);
 		EditText serverIPEditText = (EditText) findViewById(R.id.edit_server);
 
-		locationEditText.setText(Settings.getLocation().getUserLocationInput());
+        //TODO
+		//locationEditText.setText(Settings.getLocation().getUserLocationInput());
 		serverIPEditText.setText(Settings.getServerUrl());
 
 		updateLocationTextField();
@@ -97,21 +105,25 @@ public class SettingsActivity extends ActionBarActivity {
 	 * Updates the text fields of just the location.
 	 */
 	public void updateLocationTextField(){
-		Location location = Settings.getLocation();
+        JSONObject location = Location.getMostRecent();
 		TextView gpsInfoTextView = (TextView) findViewById(R.id.settings_gps_info);
 		String altitude;
-		if (location.hasAltitude())
-			altitude = String.format("%.1fm", location.getAltitude());
-		else
-			altitude = "Altitude not found.";
+		try {
+            if (location.has("altitude"))
+                altitude = String.format("%.1fm", location.getDouble("altitude"));
+            else
+                altitude = "Altitude not found.";
 
-		//Make accuracy message
-		String accuracy = String.format("%.1fm", location.getAccuracy());
+            //Make accuracy message
+            String accuracy = String.format("%.1fm", location.getDouble("accuracy"));
 
-		String locationInfo = String.format("Latitude: %f\nLongitude: %f\nAltitude: %s\nAccuracy: %s\nTime: %d",
-				location.getLatitude(), location.getLongitude(), altitude,
-				accuracy, location.getGPSLocationTime());
-		gpsInfoTextView.setText(locationInfo);
+            String locationInfo = String.format("Latitude: %f\nLongitude: %f\nAltitude: %s\nAccuracy: %s\nTime: %s",
+                    location.getDouble("latitude"), location.getDouble("longitude"), altitude,
+                    accuracy, location.getString("timestamp"));
+            gpsInfoTextView.setText(locationInfo);
+        } catch (JSONException e) {
+            Logger.e(LOG_TAG, "Error with loading info from location json");
+        }
 	}
 
 	/**
@@ -119,9 +131,10 @@ public class SettingsActivity extends ActionBarActivity {
 	 * @param view
 	 */
 	public void getGPSLocation(View view){
-		Log.v(LOG_TAG, "Get GPS Location button pressed in settings");
-		GPS gps = new GPS();
-		Log.d(LOG_TAG, this.toString());
+		Logger.v(LOG_TAG, "Get GPS Location button pressed in settings");
+		Location.getNewLocation();
+        GPS gps = new GPS();
+		Logger.d(LOG_TAG, this.toString());
 		gps.update(this);
 	}
 }

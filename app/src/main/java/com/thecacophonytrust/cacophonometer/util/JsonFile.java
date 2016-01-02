@@ -1,7 +1,5 @@
 package com.thecacophonytrust.cacophonometer.util;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 import java.io.File;
@@ -9,9 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 
-public class JSONFile {
+public class JsonFile {
 
-    private static final String LOG_TAG = "JSONFile.java";
+    private static final String LOG_TAG = "JsonFile.java";
 
     public static JSONObject getJSON(String jsonFile){
         JSONObject jo = null;
@@ -25,19 +23,21 @@ public class JSONFile {
             jo = new JSONObject(jsonString);
         } catch (Exception e){
             //TODO deal with exceptions
-            Log.e(LOG_TAG, e.toString());
+            Logger.e(LOG_TAG, e.toString());
+            Logger.exception(LOG_TAG, e);
         }
         return jo;
     }
 
     public static void saveJSONObject(String file, JSONObject jsonObject){
-        Log.d(LOG_TAG, "Saving JSON file at '"+file+"'");
+        Logger.d(LOG_TAG, "Saving JSON file at '"+file+"'");
         File f = new File(file);
         File parent = new File(f.getParent());
         FileWriter fw;
+
         try {
-            if (!parent.isDirectory() || parent.mkdirs()) {
-                Log.e(LOG_TAG, "Failed to make directory at: " + parent.toString());
+            if (!parent.mkdirs() && !parent.isDirectory()) {
+                Logger.e(LOG_TAG, "Failed to make directory at: " + parent.toString());
                 //TODO deal with this error properly, try to save in different directory maybe
             }
             fw = new FileWriter(f, false);
@@ -45,7 +45,7 @@ public class JSONFile {
             fw.close();
         } catch (Exception e){
             //TODO deal with exceptions
-            Log.e(LOG_TAG, e.toString());
+            Logger.e(LOG_TAG, e.toString());
         }
     }
 

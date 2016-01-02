@@ -1,42 +1,30 @@
 package com.thecacophonytrust.cacophonometer.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.thecacophonytrust.cacophonometer.recording.RecordingDataObject;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.thecacophonytrust.cacophonometer.recording.PlayRecording;
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.recording.RecordingArray;
-import com.thecacophonytrust.cacophonometer.rules.Rule;
-import com.thecacophonytrust.cacophonometer.rules.RulesArray;
+import com.thecacophonytrust.cacophonometer.recording.RecordingManager;
+import com.thecacophonytrust.cacophonometer.resources.Rule;
 
-public class ViewRuleActivity extends ActionBarActivity {
+public class ViewRuleActivity extends AppCompatActivity {
 
 	private static final String LOG_TAG = "ViewRuleActivity.java";
-	private List<RecordingDataObject> listRDO;
-	
-	private Rule rule = null;
-	private Intent intent = null;
-	
+
+	private Rule.DataObject rule = null;
+	private int ruleKey = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		intent = getIntent();
-		rule = RulesArray.getByName(intent.getAction());
+		Intent intent = getIntent();
+		ruleKey = intent.getIntExtra("RULE_KEY", 0);
+		rule = Rule.getRuleDO(ruleKey);
 		setContentView(R.layout.activity_view_rule);
 		updateText();
 		updateRecordingsList();
@@ -69,8 +57,8 @@ public class ViewRuleActivity extends ActionBarActivity {
 		TextView ruleNameTextView = (TextView) findViewById(R.id.view_rule_rule_name);
 		TextView recordingTimeTextView = (TextView) findViewById(R.id.view_rule_recording_time);
 		TextView recordingLengthTextView = (TextView) findViewById(R.id.view_rule_recording_length);
-		ruleNameTextView.setText("Name: " + rule.getName());
-		recordingTimeTextView.setText("Recording time: " + rule.getTimeAsString());
+		ruleNameTextView.setText("Name: " + rule.toString());
+		recordingTimeTextView.setText("Recording time: " + "Insert time here...");
 		recordingLengthTextView.setText("Recording duration: " + rule.getDuration());
 	}
 
@@ -78,31 +66,7 @@ public class ViewRuleActivity extends ActionBarActivity {
 	 * Updates the list of recordings that are displayed, only displays recording for this rule.
 	 */
 	private void updateRecordingsList(){
-		ListView lv = (ListView) findViewById(R.id.view_rule_recording_list);
-		List<RecordingDataObject> listRDOToUpload = RecordingArray.getRecordingsToUploadByRule(rule.getName());
-		List<RecordingDataObject> listRDOUploaded = RecordingArray.getUploadedRecordingsByRule(rule.getName());
-		Log.d(LOG_TAG, "to upload " + listRDOToUpload);
-		Log.d(LOG_TAG, "to upload " + listRDOUploaded);
-		
-		listRDO = new ArrayList<>();
-		listRDO.addAll(listRDOToUpload);
-		listRDO.addAll(listRDOUploaded);
-		
-		List<String> listDisplayArray = new ArrayList<>();
-		for (RecordingDataObject rdo : listRDO){
-			listDisplayArray.add(rdo.toString());
-		}
-		
-		final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listDisplayArray);
-		lv.setAdapter(adapter);
-
-		lv.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.d(LOG_TAG, "Getting rule at position " + position);
-				PlayRecording.play(listRDO.get(position), getApplicationContext());
-			}
-		});
+		//TODO
 	}
 
 	/**
@@ -110,13 +74,13 @@ public class ViewRuleActivity extends ActionBarActivity {
 	 * @param view
 	 */
 	public void delete(View view){
-		rule.delete();
+		Rule.delete(ruleKey);
+		RecordingManager.update();
 		onBackPressed();
 	}
 	
 	@Override
 	public void onBackPressed() {
-		PlayRecording.stop();
 		super.onBackPressed();
 	}
 }
