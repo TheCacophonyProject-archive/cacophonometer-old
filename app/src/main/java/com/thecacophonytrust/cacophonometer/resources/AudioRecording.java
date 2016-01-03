@@ -123,6 +123,7 @@ public class AudioRecording {
             apiJson.put("location", location);
             apiJson.put("hardware", hardware);
             apiJson.put("software", software);
+            apiJson.put("batteryPercentage", audioRecording.getDouble("batteryPercentage"));
 
         } catch (Exception e) {
             Logger.e(LOG_TAG, e.toString());

@@ -1,9 +1,11 @@
 package com.thecacophonytrust.cacophonometer.recording;
 
 import android.media.MediaRecorder;
+import android.os.BatteryManager;
 import android.os.Looper;
 
 import com.thecacophonytrust.cacophonometer.Settings;
+import com.thecacophonytrust.cacophonometer.activity.MainActivity;
 import com.thecacophonytrust.cacophonometer.resources.AudioFile;
 import com.thecacophonytrust.cacophonometer.resources.AudioRecording;
 import com.thecacophonytrust.cacophonometer.resources.Hardware;
@@ -58,12 +60,15 @@ public class AudioCaptureRunnable implements Runnable{
             Thread.sleep(sleepTime);
             mRecorder.stop();
 
+
+
             audioFile.put("localFilePath", filePath);
             audioFile.put("duration", rule.getDuration());
             audioRecording.put("audioFileKey", AudioFile.addAndSave(audioFile));
             audioRecording.put("locationKey", Location.getMostRecentKey());
             audioRecording.put("hardwareKey", Hardware.getCurrentKey());
             audioRecording.put("softwareKey", Software.getCurrentKey());
+            audioRecording.put("batteryPercentage", MainActivity.getBatteryPercentage());
             audioRecording.put("uploaded", false);
 
             AudioRecording.add(audioRecording);
