@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <service android:name=".recording.AudioCaptureService"/>
+        <service android:name=".audioRecording.AudioCaptureService"/>
 
         <activity
             android:name=".activity.MainActivity"

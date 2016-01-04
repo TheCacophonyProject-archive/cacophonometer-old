@@ -1,4 +1,4 @@
-package com.thecacophonytrust.cacophonometer.recording;
+package com.thecacophonytrust.cacophonometer.audioRecording;
 
 import android.app.IntentService;
 import android.content.Context;

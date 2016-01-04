@@ -1,7 +1,6 @@
-package com.thecacophonytrust.cacophonometer.recording;
+package com.thecacophonytrust.cacophonometer.audioRecording;
 
 import android.media.MediaRecorder;
-import android.os.BatteryManager;
 import android.os.Looper;
 
 import com.thecacophonytrust.cacophonometer.Settings;
@@ -38,7 +37,7 @@ public class AudioCaptureRunnable implements Runnable{
     @Override
     public void run() {
         Logger.i(LOG_TAG, "Starting audio capture runnable.");
-        RecordingManager.setRecording(true);
+        AudioCaptureManager.setRecording(true);
         Looper.prepare();
         Location.getNewLocation();
         finished = false;
@@ -80,7 +79,7 @@ public class AudioCaptureRunnable implements Runnable{
             finished = true;
             AudioCaptureService.finishedAudioCapture(error);
             Logger.i(LOG_TAG, "Finished audio capture runnable.");
-            RecordingManager.setRecording(false);
+            AudioCaptureManager.setRecording(false);
             Update.now();
         }
     }

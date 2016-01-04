@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.recording.RecordingManager;
+import com.thecacophonytrust.cacophonometer.audioRecording.AudioCaptureManager;
 import com.thecacophonytrust.cacophonometer.resources.Rule;
 
 public class ViewRuleActivity extends AppCompatActivity {
@@ -75,7 +75,7 @@ public class ViewRuleActivity extends AppCompatActivity {
 	 */
 	public void delete(View view){
 		Rule.delete(ruleKey);
-		RecordingManager.update();
+		AudioCaptureManager.update();
 		onBackPressed();
 	}
 	

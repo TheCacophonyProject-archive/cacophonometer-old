@@ -1,4 +1,4 @@
-package com.thecacophonytrust.cacophonometer.recording;
+package com.thecacophonytrust.cacophonometer.audioRecording;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -16,8 +16,8 @@ import java.util.Calendar;
  * This alarm calls the AudioCaptureService that will then start a recording.
  * When the recording is complete the recordingFinished method is called.
  */
-public class RecordingManager {
-    private static final String LOG_TAG = "RecordingManager.java";
+public class AudioCaptureManager {
+    private static final String LOG_TAG = "AudioCaptureManager.java";
 
     private static boolean initialized = false;
     private static int nextRuleKey = 0;
@@ -32,7 +32,7 @@ public class RecordingManager {
      * This updated the recording manager. Checks that the correct alarm and rule is set.
      */
     public static void update(){
-        Logger.d(LOG_TAG, "Updating RecordingManager");
+        Logger.d(LOG_TAG, "Updating AudioCaptureManager");
         if (needToUpdateRecordingAlarm()){
             updateRecordingAlarm();
         }
@@ -44,18 +44,18 @@ public class RecordingManager {
      */
     public static void init(Context context){
         if (initialized){
-            Logger.e(LOG_TAG, "Calling init on RecordingManager when is has already been initialized.");
+            Logger.e(LOG_TAG, "Calling init on AudioCaptureManager when is has already been initialized.");
             return;
         }
-        RecordingManager.context = context;
+        AudioCaptureManager.context = context;
         initialized = true;
-        Logger.i(LOG_TAG, "Initializing RecordingManager.");
+        Logger.i(LOG_TAG, "Initializing AudioCaptureManager.");
         am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         update();
     }
 
     public static void setRecording(boolean recording) {
-        RecordingManager.recording = recording;
+        AudioCaptureManager.recording = recording;
     }
 
     public static boolean isRecording() {

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.Settings;
-import com.thecacophonytrust.cacophonometer.recording.RecordingManager;
+import com.thecacophonytrust.cacophonometer.audioRecording.AudioCaptureManager;
 import com.thecacophonytrust.cacophonometer.resources.Hardware;
 import com.thecacophonytrust.cacophonometer.resources.Location;
 import com.thecacophonytrust.cacophonometer.resources.Rule;
@@ -75,13 +75,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void displayNextRecordingStatus(){
         String text;
-        if (RecordingManager.isRecording())
+        if (AudioCaptureManager.isRecording())
             text = "Device is recording now.";
         else if (Rule.getNextRuleKey() == 0)
             text = "No rules found for recording";
         else {
             //TODO this could be done better... but works for now.
-            Calendar timeOfRecording = RecordingManager.getStartTime();
+            Calendar timeOfRecording = AudioCaptureManager.getStartTime();
 
             if (timeOfRecording != null) {
                 long timeToNextRecording = (timeOfRecording.getTimeInMillis() - System.currentTimeMillis())/1000;
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         Hardware.loadFromFile();
         Software.loadFromFile();
         Rule.loadFromFile();
-        RecordingManager.init(getApplicationContext());
+        AudioCaptureManager.init(getApplicationContext());
         GPS.init(getApplicationContext());
         GPS gps = new GPS();
         gps.update(null);
