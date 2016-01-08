@@ -108,6 +108,10 @@ public class SettingsActivity extends AppCompatActivity {
         JSONObject location = Location.getMostRecent();
 		TextView gpsInfoTextView = (TextView) findViewById(R.id.settings_gps_info);
 		String altitude;
+		if (location == null) {
+			Logger.i(LOG_TAG, "No location info found.");
+			return;
+		}
 		try {
             if (location.has("altitude"))
                 altitude = String.format("%.1fm", location.getDouble("altitude"));
