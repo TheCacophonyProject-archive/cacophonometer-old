@@ -67,7 +67,7 @@ public class Software {
             currentSoftware.put("osIncremental", Build.VERSION.INCREMENTAL);
             currentSoftware.put("sdkInt", Build.VERSION.SDK_INT);
             currentSoftware.put("osRelease", Build.VERSION.RELEASE);
-            currentSoftware.put("appVersion", Settings.getAppVersion());
+            currentSoftware.put("version", Settings.getAppVersion());
         } catch (JSONException e) {
             Logger.e(LOG_TAG, "Error with getting phone software data");
             Logger.exception(LOG_TAG, e);
