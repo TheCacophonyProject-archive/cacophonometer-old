@@ -23,6 +23,7 @@ public class Settings {
 	private static File homeFile = null;
 	private static File tempFile = null;
 	private static File recordingFolder = null;
+	private static File videoRecordingFolder = null;
 	private static File settingsFile = null;
 	private static File rulesFolder = null;
 	private static int deviceId = 0;
@@ -32,6 +33,7 @@ public class Settings {
 	private static final String DEFAULT_TEMP_FOLDER = "temp";
 	private static final String DEFAULT_RULES_FOLDER = "rules";
 	private static final String DEFAULT_RECORDINGS_FOLDER = "recordings";
+	private static final String DEFAULT_VIDEO_RECORDINGS_FOLDER = "videoRecordings";
 	private static final String DEFAULT_SETTINGS_JSON_FILE = "settings.json";
 
 	public static File getSettingsFile(){
@@ -151,6 +153,17 @@ public class Settings {
 			recordingFolder = new File(getHomeFile(), DEFAULT_RECORDINGS_FOLDER);
 			if (!recordingFolder.exists() && !recordingFolder.isDirectory() && !recordingFolder.mkdirs()){
 				Logger.e(LOG_TAG, "Error with the recording Folder");
+				//TODO try to fix problem and if cant output error message then exit, maybe send error to server.
+			}
+		}
+		return recordingFolder;
+	}
+
+	public static File getVideoRecordingsFolder(){
+		if (videoRecordingFolder == null){
+			videoRecordingFolder = new File(getHomeFile(), DEFAULT_VIDEO_RECORDINGS_FOLDER);
+			if (!videoRecordingFolder.exists() && !videoRecordingFolder.isDirectory() && !videoRecordingFolder.mkdirs()){
+				Logger.e(LOG_TAG, "Error with the video recording Folder");
 				//TODO try to fix problem and if cant output error message then exit, maybe send error to server.
 			}
 		}

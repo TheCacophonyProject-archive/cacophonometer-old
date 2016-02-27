@@ -7,9 +7,9 @@ import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.activity.MainActivity;
 import com.thecacophonytrust.cacophonometer.resources.AudioFile;
 import com.thecacophonytrust.cacophonometer.resources.AudioRecording;
+import com.thecacophonytrust.cacophonometer.resources.AudioRules;
 import com.thecacophonytrust.cacophonometer.resources.Hardware;
 import com.thecacophonytrust.cacophonometer.resources.Location;
-import com.thecacophonytrust.cacophonometer.resources.Rule;
 import com.thecacophonytrust.cacophonometer.resources.Software;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.Update;
@@ -30,7 +30,7 @@ public class AudioCaptureRunnable implements Runnable{
 
     private static DateFormat iso8601 = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.UK); //This format is used as it has it's characters are all file friendlily (not including -:+....)
 
-    private Rule.DataObject rule = null;
+    private AudioRules.DataObject rule = null;
     private MediaRecorder mRecorder = null;
     private boolean finished = false;
 
@@ -89,7 +89,7 @@ public class AudioCaptureRunnable implements Runnable{
     }
 
     public void setRuleKey(int key) {
-        this.rule = Rule.getRuleDO(key);
+        this.rule = AudioRules.getRuleDO(key);
     }
 
     private void prepareMediaRecorder(String filePath) throws IOException {

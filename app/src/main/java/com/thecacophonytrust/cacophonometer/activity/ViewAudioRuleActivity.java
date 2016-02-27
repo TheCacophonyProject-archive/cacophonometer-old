@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.audioRecording.AudioCaptureManager;
-import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.resources.AudioRules;
 
-public class ViewRuleActivity extends AppCompatActivity {
+public class ViewAudioRuleActivity extends AppCompatActivity {
 
-	private static final String LOG_TAG = "ViewRuleActivity.java";
+	private static final String LOG_TAG = "ViewAudioRuleActivity.java";
 
-	private Rule.DataObject rule = null;
+	private AudioRules.DataObject rule = null;
 	private int ruleKey = 0;
 
 	@Override
@@ -24,7 +24,7 @@ public class ViewRuleActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 		ruleKey = intent.getIntExtra("RULE_KEY", 0);
-		rule = Rule.getRuleDO(ruleKey);
+		rule = AudioRules.getRuleDO(ruleKey);
 		setContentView(R.layout.activity_view_rule);
 		updateText();
 		updateRecordingsList();
@@ -74,7 +74,7 @@ public class ViewRuleActivity extends AppCompatActivity {
 	 * @param view
 	 */
 	public void delete(View view){
-		Rule.delete(ruleKey);
+		AudioRules.delete(ruleKey);
 		AudioCaptureManager.update();
 		onBackPressed();
 	}

@@ -8,46 +8,59 @@
     android:orientation="vertical">
     
     <Button
-        android:id="@+id/rules_button"
+        android:id="@+id/audio_rules_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
-        android:text="Rules"
-        android:onClick="openRules" />
-    
-    <TextView 
-        android:id="@+id/info_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="Next recording" />
-    
+        android:text="Audio Rules"
+        android:onClick="openAudioRules" />
+
     <Button
-        android:id="@+id/play_button"
+        android:id="@+id/video_rules_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:onClick="playLastRecording"
-        android:text="Play last recording" />
-    
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:text="Video Rules"
+        android:onClick="openVideoRules" />
+
+    <Button
+        android:id="@+id/video_preview_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:text="Camera Preview"
+        android:onClick="openCameraPreview" />
+
+
     <TextView 
-        android:id="@+id/last_recording_text"
+        android:id="@+id/next_audio_recording_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Last recording" />
+        android:text="Next audio recording" />
+
+    <TextView
+        android:id="@+id/next_video_recording_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Next video recording" />
+
     <Button
         android:id="@+id/testCode"
         android:layout_width="wrap_content"

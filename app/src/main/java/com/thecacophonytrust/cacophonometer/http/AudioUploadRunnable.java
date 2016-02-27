@@ -16,8 +16,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class UploadRunnable implements Runnable{
-    private static final String LOG_TAG = "UploadRunnable.java";
+public class AudioUploadRunnable implements Runnable{
+    private static final String LOG_TAG = "AudioUploadRunnable.java";
     private static final String LINE_END = "\r\n";
     private static final String TWO_HYPHENS = "--";
 

@@ -1,50 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thecacophonytrust.cacophonometer" >
+<manifest package="com.thecacophonytrust.cacophonometer"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-
+        android:theme="@style/AppTheme">
         <service android:name=".audioRecording.AudioCaptureService"/>
+        <service android:name=".videoRecording.VideoCaptureService"/>
 
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="Settings" >
+            android:label="Settings">
         </activity>
         <activity
-            android:name=".activity.RulesMenuActivity"
-            android:label="Rules" >
+            android:name=".activity.AudioRulesMenuActivity"
+            android:label="Rules">
         </activity>
         <activity
-            android:name=".activity.NewRuleActivity"
-            android:label="New Rule" >
+            android:name=".activity.NewAudioRuleActivity"
+            android:label="New Rule">
         </activity>
         <activity
-            android:name=".activity.ViewRuleActivity"
-            android:label="View Rule" >
+            android:name=".activity.ViewAudioRuleActivity"
+            android:label="View Rule">
         </activity>
-
+        <activity
+            android:name=".activity.VideoRulesMenuActivity"
+            android:label="Video Rules">
+        </activity>
+        <activity
+            android:name=".activity.NewVideoRuleActivity"
+            android:label="New Video Rule">
+        </activity>
+        <activity
+            android:name=".activity.ViewVideoRuleActivity"
+            android:label="Video Rule">
+        </activity>
+        <activity
+            android:name=".activity.CameraPreviewActivity"
+            android:label="Camera preview">
+        </activity>
     </application>
 
 </manifest>

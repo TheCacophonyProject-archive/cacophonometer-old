@@ -18,13 +18,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.resources.AudioRules;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.Update;
 
-public class RulesMenuActivity extends AppCompatActivity {
+public class AudioRulesMenuActivity extends AppCompatActivity {
 
-	private static final String LOG_TAG = "RulesMenuActivity.java";
+	private static final String LOG_TAG = "AudioRulesMenuActivity.java";
 	
 	private List<Integer> ruleKeyList;
 	
@@ -63,14 +63,14 @@ public class RulesMenuActivity extends AppCompatActivity {
 	}
 
 	private void newRule() {
-		Intent intent = new Intent(this, NewRuleActivity.class);
+		Intent intent = new Intent(this, NewAudioRuleActivity.class);
 		startActivity(intent);
 	}
 
 	public void updateRules() {
 		ListView lv = (ListView) findViewById(R.id.listView1);
 		ArrayList<String> list = new ArrayList<>();
-		Map<Integer, Rule.DataObject> ruleMap = Rule.getRuleDOMap();
+		Map<Integer, AudioRules.DataObject> ruleMap = AudioRules.getRuleDOMap();
 		ruleKeyList = new ArrayList<>();
 		
 		for (int key : ruleMap.keySet()) {
@@ -92,8 +92,8 @@ public class RulesMenuActivity extends AppCompatActivity {
 	public void startRuleActivity(int position) {
 		Logger.d(LOG_TAG, ruleKeyList.toString());
 		int ruleKey = ruleKeyList.get(position);
-		//Logger.d(LOG_TAG, "Rule.DataObject: " + r.toString());
-		Intent i = new Intent(this, ViewRuleActivity.class);
+		//Logger.d(LOG_TAG, "AudioRules.DataObject: " + r.toString());
+		Intent i = new Intent(this, ViewAudioRuleActivity.class);
 		i.putExtra("RULE_KEY", ruleKey);
 		//i.setAction(ruleKey);
 		startActivity(i);

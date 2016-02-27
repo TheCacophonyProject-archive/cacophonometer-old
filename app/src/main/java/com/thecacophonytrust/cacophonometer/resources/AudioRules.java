@@ -12,10 +12,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Rule {
-    private static final String LOG_TAG = "Rule.java";
+public class AudioRules {
+    private static final String LOG_TAG = "AudioRules.java";
 
-    static final String folderName = "Rule";
+    static final String folderName = "AudioRules";
 
     private static Map<Integer, JSONObject> ruleMap = new HashMap<>();
     private static Map<Integer, DataObject> ruleDOMap = new HashMap<>();   //This holds the rule as a data object. This makes it easier to use in functions and calculations.
@@ -83,7 +83,7 @@ public class Rule {
                 add(ruleFiles.get(key), key);
             }
         }
-        Logger.d(LOG_TAG, count + " Rule objects were loaded.");
+        Logger.d(LOG_TAG, count + " AudioRules objects were loaded.");
     }
 
     public static JSONObject convertForUpload(int key) {
@@ -91,13 +91,13 @@ public class Rule {
     }
 
     static public int getNextRuleKey(){
-        Logger.d(LOG_TAG, "Finding next Rule");
+        Logger.d(LOG_TAG, "Finding next AudioRules");
         if (ruleDOMap.size() == 0) return 0;
         int nextRuleKey = 0;
         for (int key : ruleDOMap.keySet()){
             if (nextRuleKey == 0){
                 nextRuleKey = key;
-            } else if (ruleDOMap.get(key).nextRecordingTime().before(ruleDOMap.get(nextRuleKey).nextRecordingTime()))
+            } else if (ruleDOMap.get(key).nextAlarmTime().before(ruleDOMap.get(nextRuleKey).nextAlarmTime()))
                 nextRuleKey = key;
         }
         return nextRuleKey;
@@ -138,7 +138,7 @@ public class Rule {
             }
         }
 
-        public Calendar nextRecordingTime() {
+        public Calendar nextAlarmTime() {
             Calendar now = Calendar.getInstance();
             while (startTime.before(now)) {
                 startTime.add(Calendar.DATE, 1);

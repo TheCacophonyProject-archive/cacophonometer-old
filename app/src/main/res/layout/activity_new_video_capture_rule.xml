@@ -1,0 +1,94 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp">
+
+        <Button
+            android:id="@+id/rule_save"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="saveRule"
+            android:text="Save"
+            tools:ignore="HardcodedText" />
+        <Button
+            android:id="@+id/rule_cancel"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="cancelRule"
+            android:text="Cancel"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Name"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/edit_rule_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="rule name" />
+
+            <TextView
+                android:id="@+id/new_rule_start_time_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Start Time"
+                android:textSize="20sp"
+                style="?android:attr/listSeparatorTextViewStyle"/>
+
+            <Button
+                android:id="@+id/new_rule_set_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="setTime"
+                android:text="Start time" />
+
+            <TextView
+                android:id="@+id/length"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Length (seconds)"
+                android:textSize="20sp"
+                style="?android:attr/listSeparatorTextViewStyle"/>
+
+            <EditText
+                android:id="@+id/length_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="3"
+                android:inputType="number"
+                android:text="6">
+            </EditText>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

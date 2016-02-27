@@ -3,6 +3,9 @@ package com.thecacophonytrust.cacophonometer.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Camera;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,22 +17,27 @@ import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.audioRecording.AudioCaptureManager;
+import com.thecacophonytrust.cacophonometer.resources.AudioRules;
 import com.thecacophonytrust.cacophonometer.resources.Hardware;
 import com.thecacophonytrust.cacophonometer.resources.Location;
-import com.thecacophonytrust.cacophonometer.resources.Rule;
 import com.thecacophonytrust.cacophonometer.resources.Software;
+import com.thecacophonytrust.cacophonometer.resources.VideoRules;
 import com.thecacophonytrust.cacophonometer.util.GPS;
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.util.JsonFile;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.Update;
+import com.thecacophonytrust.cacophonometer.videoRecording.VideoCaptureManager;
 
+import java.io.File;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MainActivity.java";
     private static Context context = null;
+
+    public static MainActivity currentInstance = null;
 
     @Override
     public void onBackPressed() {
@@ -41,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Logger.i(LOG_TAG, "MainActivity created.");
         init();
-
+        currentInstance = this;
         setContentView(R.layout.activity_main);
     }
 
@@ -74,11 +82,11 @@ public class MainActivity extends AppCompatActivity {
      * Displays a Toast of the recording status (time until recording, device is recording, no recording found).
      */
     private void displayNextRecordingStatus(){
-        String text;
+        String audioText;
         if (AudioCaptureManager.isRecording())
-            text = "Device is recording now.";
-        else if (Rule.getNextRuleKey() == 0)
-            text = "No rules found for recording";
+            audioText = "Device is audio recording now.";
+        else if (AudioRules.getNextRuleKey() == 0)
+            audioText = "No audio rules found for recording";
         else {
             //TODO this could be done better... but works for now.
             Calendar timeOfRecording = AudioCaptureManager.getStartTime();
@@ -88,39 +96,65 @@ public class MainActivity extends AppCompatActivity {
                 int hours = (int) (timeToNextRecording / 3600);
                 int minutes = (int) (timeToNextRecording % 3600) / 60;
                 int seconds = (int) timeToNextRecording % 60;
-                text = String.format("Next recording starts in %02d:%02d:%02d.", hours, minutes, seconds);
+                audioText = String.format("Next audio recording starts in %02d:%02d:%02d.", hours, minutes, seconds);
             } else {
-                text = "No rules found for recording.";
+                audioText = "No rules found for recording.";
             }
         }
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), audioText, Toast.LENGTH_SHORT).show();
+
+        String videoText;
+        if (VideoCaptureManager.isRecording())
+            videoText = "Device is video recording now.";
+        else if (VideoRules.getNextRuleKey() == 0)
+            videoText = "No video rules found for recording";
+        else {
+            //TODO this could be done better... but works for now.
+            Calendar timeOfRecording = VideoCaptureManager.getStartTime();
+
+            if (timeOfRecording != null) {
+                long timeToNextRecording = (timeOfRecording.getTimeInMillis() - System.currentTimeMillis())/1000;
+                int hours = (int) (timeToNextRecording / 3600);
+                int minutes = (int) (timeToNextRecording % 3600) / 60;
+                int seconds = (int) timeToNextRecording % 60;
+                videoText = String.format("Next video recording starts in %02d:%02d:%02d.", hours, minutes, seconds);
+            } else {
+                videoText = "No rules found for video recording.";
+            }
+        }
+        Toast.makeText(getApplicationContext(), videoText, Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Updates the text that is displayed.
      */
     private void updateText() {
-        int nextRuleKey = Rule.getNextRuleKey();
-        TextView infoTextView = (TextView) findViewById(R.id.info_text);
-        TextView lastRecordingTextView = (TextView) findViewById(R.id.last_recording_text);
+        int nextAudioRuleKey = AudioRules.getNextRuleKey();
+        TextView audioInfoTextView = (TextView) findViewById(R.id.next_audio_recording_text);
 
-        if (nextRuleKey == 0){
-            infoTextView.setText("No rule found for next recording");
+        if (nextAudioRuleKey == 0){
+            audioInfoTextView.setText("No rule found for next audio recording");
         } else {
             //TODO
-            int hour = Rule.getRuleDO(nextRuleKey).nextRecordingTime().get(Calendar.HOUR_OF_DAY);
-            int minute = Rule.getRuleDO(nextRuleKey).nextRecordingTime().get(Calendar.MINUTE);
-            String name = Rule.getRuleDO(nextRuleKey).name;
-            infoTextView.setText(String.format("Next recording at %02d:%02d for rule '%s'", hour, minute, name));
+            int hour = AudioRules.getRuleDO(nextAudioRuleKey).nextAlarmTime().get(Calendar.HOUR_OF_DAY);
+            int minute = AudioRules.getRuleDO(nextAudioRuleKey).nextAlarmTime().get(Calendar.MINUTE);
+            String name = AudioRules.getRuleDO(nextAudioRuleKey).name;
+            audioInfoTextView.setText(String.format("Next audio recording at %02d:%02d for rule '%s'", hour, minute, name));
         }
-        //TODO
-/*
-        if (lastRDO == null){
-            lastRecordingTextView.setText("Last recording not found");
+
+        int nextVideoRuleKey = VideoRules.getNextRuleKey();
+        TextView videoInfoTextView = (TextView) findViewById(R.id.next_video_recording_text);
+
+        if (nextVideoRuleKey == 0){
+            videoInfoTextView.setText("No rule found for next video recording");
         } else {
-            lastRecordingTextView.setText("Last recording from rule '"+lastRDO.getRuleName()+"'");
+            //TODO
+            int hour = VideoRules.getRuleDO(nextVideoRuleKey).nextVideoCaptureTime().get(Calendar.HOUR_OF_DAY);
+            int minute = VideoRules.getRuleDO(nextVideoRuleKey).nextVideoCaptureTime().get(Calendar.MINUTE);
+            String name = VideoRules.getRuleDO(nextVideoRuleKey).name;
+            videoInfoTextView.setText(String.format("Next video recording at %02d:%02d for rule '%s'", hour, minute, name));
         }
-        */
+
     }
 
     /**
@@ -131,13 +165,33 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    /**
+     * Opens the camera preview activity
+     */
+    public void openCameraPreview(View v) {
+        Intent intent = new Intent(this, CameraPreviewActivity.class);
+        startActivity(intent);
+    }
+
+    public void openCameraPreview() {
+        Intent intent = new Intent(this, CameraPreviewActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Opens the Rules activity
      */
-    public void openRules(View v) {
-        Intent intent = new Intent(this, RulesMenuActivity.class);
+    public void openAudioRules(View v) {
+        Intent intent = new Intent(this, AudioRulesMenuActivity.class);
         startActivity(intent);
     }
+
+    public void openVideoRules(View v) {
+        Intent intent = new Intent(this, VideoRulesMenuActivity.class);
+        startActivity(intent);
+    }
+
 
     /**
      * Plays the last recording that was recorded in this session.
@@ -154,8 +208,10 @@ public class MainActivity extends AppCompatActivity {
         Location.loadFromFile();
         Hardware.loadFromFile();
         Software.loadFromFile();
-        Rule.loadFromFile();
+        AudioRules.loadFromFile();
+        VideoRules.loadFromFile();
         AudioCaptureManager.init(getApplicationContext());
+        VideoCaptureManager.init(getApplicationContext());
         GPS.init(getApplicationContext());
         GPS gps = new GPS();
         gps.update(null);
@@ -173,13 +229,32 @@ public class MainActivity extends AppCompatActivity {
     public void testCode(View v) {
 
         Logger.i(LOG_TAG, "Starting test code");
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = context.registerReceiver(null, ifilter);
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        Camera camera = null;
+        try {
+            camera = Camera.open(1);
+            File file = new File(Settings.getRecordingsFolder(), "test2.mp4");
+            MediaRecorder recorder = new MediaRecorder();
+            recorder.setCamera(camera);
+            recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+            recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
 
-        double batteryPct = level / (float)scale;
-        Toast.makeText(getApplicationContext(), "Battery at " + Double.toString(batteryPct), Toast.LENGTH_SHORT).show();
+            CamcorderProfile cpHigh = CamcorderProfile
+                    .get(CamcorderProfile.QUALITY_HIGH);
+            recorder.setProfile(cpHigh);
+            recorder.setOutputFile(file.getAbsolutePath());
+            recorder.setMaxDuration(50000); // 50 seconds
+            recorder.setMaxFileSize(5000000);
+            recorder.prepare();
+            recorder.start();
+            Thread.sleep(10000);
+            recorder.stop();
+
+
+        } catch (Exception e) {
+            Logger.exception(LOG_TAG, e);
+
+        }
+
     }
 
     public static Context getContext(){

@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.resources.AudioRules;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 
 import java.util.Calendar;
@@ -69,20 +69,20 @@ public class AudioCaptureManager {
     private static boolean needToUpdateRecordingAlarm(){
         Logger.i(LOG_TAG, "Checking if Recording alarm needs updating.");
         Calendar now = Calendar.getInstance();
-        int newNextRuleKey = Rule.getNextRuleKey();
+        int newNextRuleKey = AudioRules.getNextRuleKey();
         boolean result;
         if (nextRuleKey != newNextRuleKey) {
-            Logger.d(LOG_TAG, "nextRuleKey does not equal Rule.getNextRuleKey.");
+            Logger.d(LOG_TAG, "nextRuleKey does not equal AudioRules.getNextRuleKey.");
             result = true;
         } else if (now.after(startTimeCalendar)) {
             Logger.d(LOG_TAG, "Recording time has passed.");
             result = true;
-        } else if (Rule.getFromKey(nextRuleKey) == null && nextRuleKey != 0) {
+        } else if (AudioRules.getFromKey(nextRuleKey) == null && nextRuleKey != 0) {
             Logger.d(LOG_TAG, "Next rule key was not found.");
             result = true;
         } else {
             if (newNextRuleKey == 0) return false;
-            Calendar newStartTime = Rule.getRuleDO(newNextRuleKey).nextRecordingTime();
+            Calendar newStartTime = AudioRules.getRuleDO(newNextRuleKey).nextAlarmTime();
             if (newStartTime.equals(startTimeCalendar)) {
                 Logger.d(LOG_TAG, "New start time equals saved start time.");
                 result = false;
@@ -101,7 +101,7 @@ public class AudioCaptureManager {
 
     private static void updateRecordingAlarm(){
         Logger.i(LOG_TAG, "Updating recording alarm.");
-        nextRuleKey = Rule.getNextRuleKey();
+        nextRuleKey = AudioRules.getNextRuleKey();
         if (nextRuleKey == 0) {
             Logger.d(LOG_TAG, "No rule found for recording. Canceling alarm.");
             am.cancel(pi);
@@ -111,7 +111,7 @@ public class AudioCaptureManager {
             am.cancel(pi);
             pi = null;
         }
-        startTime = Rule.getRuleDO(nextRuleKey).nextRecordingTime();
+        startTime = AudioRules.getRuleDO(nextRuleKey).nextAlarmTime();
         Calendar now = Calendar.getInstance();
         long secondsToRecording = (startTime.getTimeInMillis() - now.getTimeInMillis())/1000;
         Logger.d(LOG_TAG, "Seconds to recording: " + secondsToRecording);

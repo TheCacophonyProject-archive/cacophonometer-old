@@ -12,16 +12,16 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.thecacophonytrust.cacophonometer.R;
-import com.thecacophonytrust.cacophonometer.resources.Rule;
+import com.thecacophonytrust.cacophonometer.resources.AudioRules;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 
 import org.json.JSONObject;
 
 import java.util.Calendar;
 
-public class NewRuleActivity extends AppCompatActivity {
+public class NewAudioRuleActivity extends AppCompatActivity {
 
-	final static private String LOG_TAG = "NewRuleActivity.java";
+	final static private String LOG_TAG = "NewAudioRuleActivity.java";
 
 	private int hour = -1;
 	private int minute = -1;
@@ -84,7 +84,7 @@ public class NewRuleActivity extends AppCompatActivity {
 				rule.put("name", name.getText().toString());
 				rule.put("startTimestamp", hour+":"+minute);
 				rule.put("duration", Integer.parseInt(duration.getText().toString()));
-				Rule.addAndSave(rule);
+				AudioRules.addAndSave(rule);
 				super.onBackPressed();
 			} catch (Exception e) {
 				Toast.makeText(getApplicationContext(), "Error with saving rule", Toast.LENGTH_SHORT).show();
