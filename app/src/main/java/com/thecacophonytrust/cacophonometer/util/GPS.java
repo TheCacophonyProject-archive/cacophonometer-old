@@ -36,8 +36,8 @@ public class GPS implements LocationListener {
         Toast.makeText(context, "Location change", Toast.LENGTH_SHORT).show();
         double lat = location.getLatitude();
         double lon = location.getLongitude();
-        double alt = location.getAltitude();
-        float acc = location.getAccuracy();
+        long alt = Math.round(location.getAltitude());
+        int acc = Math.round(location.getAccuracy());
         String str = "Latitude: "+lat+" Longitude: "+lon;
 
         JSONObject jo = new JSONObject();
