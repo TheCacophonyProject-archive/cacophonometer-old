@@ -32,7 +32,7 @@ public class UploadManager {
      * @param response String of the response from the server.
      * @param recordingKey The recordingKey of the recording that was uploaded.
      */
-    public static void finishedUpload(int responseCode, String response, int recordingKey){
+    public static void finishedAudioUpload(int responseCode, String response, int recordingKey){
         if (responseCode != HttpsURLConnection.HTTP_OK){
             Logger.e(LOG_TAG, "Error with upload upload. Response code of " + Integer.toString(responseCode));
             AudioRecording.errorWithUpload(recordingKey, response);
@@ -43,8 +43,24 @@ public class UploadManager {
         }
     }
 
-    public static void errorWithUpload(int recordingKey, String message){
+    public static void errorWithAudioUpload(int recordingKey, String message){
         AudioRecording.errorWithUpload(recordingKey, message);
+        Logger.e(LOG_TAG, "Error with upload. RecordingKey: " + recordingKey + ", Message: " + message);
+    }
+
+    public static void finishedVideoUpload(int responseCode, String response, int recordingKey){
+        if (responseCode != HttpsURLConnection.HTTP_OK){
+            Logger.e(LOG_TAG, "Error with upload upload. Response code of " + Integer.toString(responseCode));
+            VideoRecording.errorWithUpload(recordingKey, response);
+        } else {
+            Logger.i(LOG_TAG, "Successful upload.");
+            Logger.d(LOG_TAG, "Response from server: " + response);
+            VideoRecording.finishedUpload(recordingKey, response);
+        }
+    }
+
+    public static void errorWithVideoUpload(int recordingKey, String message){
+        VideoRecording.errorWithUpload(recordingKey, message);
         Logger.e(LOG_TAG, "Error with upload. RecordingKey: " + recordingKey + ", Message: " + message);
     }
 

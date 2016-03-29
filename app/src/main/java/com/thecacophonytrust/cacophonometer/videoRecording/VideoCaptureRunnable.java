@@ -19,6 +19,7 @@ import com.thecacophonytrust.cacophonometer.util.CameraUtil;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.Update;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -64,6 +65,9 @@ public class VideoCaptureRunnable implements Runnable{
     }
 
     public void setRuleKey(int key) {
+        if (key == -1) {
+            rule = null;
+        }
         this.rule = VideoRules.getRuleDO(key);
     }
 
@@ -71,7 +75,10 @@ public class VideoCaptureRunnable implements Runnable{
         this.cpa = cpa;
         this.cpFinished = true;
         if (this.vpFinished) {
-            initRecording();
+            if (rule == null)
+                initMotionRecording();
+            else
+                initRecording();
         }
     }
 
@@ -79,7 +86,10 @@ public class VideoCaptureRunnable implements Runnable{
         this.vp = vp;
         this.vpFinished = true;
         if (this.cpFinished) {
-            initRecording();
+            if (rule == null)
+                initMotionRecording();
+            else
+                initRecording();
         }
     }
 
@@ -130,6 +140,58 @@ public class VideoCaptureRunnable implements Runnable{
             Logger.i(LOG_TAG, "Finished video capture runnable.");
             VideoCaptureManager.setRecording(false);
             Update.now();
+        }
+    }
+
+    public void initMotionRecording(){
+        Logger.d(LOG_TAG, "Init motion capture.");
+        try {
+            mRecorder = new MediaRecorder();
+            CameraUtil.getCamera().unlock();
+            mRecorder.setCamera(CameraUtil.getCamera());
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+            mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+            mRecorder.setProfile(CamcorderProfile.get(MediaRecorder.OutputFormat.MPEG_4));
+            mRecorder.setOutputFile(filePath);
+            mRecorder.setPreviewDisplay(vp.getSurface());
+            mRecorder.prepare();
+            //Thread.sleep(1000);
+            Logger.d(LOG_TAG, "Starting motion capture.");
+            mRecorder.start();
+        } catch (Exception e) {
+            Logger.e(LOG_TAG, "Error with starting motion capture.");
+            Logger.exception(LOG_TAG, e);
+        }
+    }
+
+    public void stopMotionRecording() {
+        Logger.i(LOG_TAG, "Stopping motion capture.");
+        JSONObject videoRecording = new JSONObject();
+        JSONObject videoFile = new JSONObject();
+        try {
+            mRecorder.stop();
+
+            videoFile.put("localFilePath", filePath);
+            videoFile.put("duration", 10);
+            videoRecording.put("videoFileKey", VideoFile.addAndSave(videoFile));
+            videoRecording.put("locationKey", Location.getMostRecentKey());
+            videoRecording.put("hardwareKey", Hardware.getCurrentKey());
+            videoRecording.put("softwareKey", Software.getCurrentKey());
+            videoRecording.put("batteryPercentage", MainActivity.getBatteryPercentage());
+            videoRecording.put("uploaded", false);
+            VideoRecording.addAndSave(videoRecording);
+
+
+            Logger.i(LOG_TAG, "Finished video capture");
+        } catch (JSONException e) {
+            Logger.e(LOG_TAG, "Error with stopping motion capture.");
+            Logger.exception(LOG_TAG, e);
+        } finally {
+            finished = true;
+            Logger.i(LOG_TAG, "Finished video capture runnable.");
+            VideoCaptureManager.setRecording(false);
+            Update.now();
+            cpa.onBackPressed();
         }
     }
 }

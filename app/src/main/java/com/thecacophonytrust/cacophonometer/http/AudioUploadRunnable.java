@@ -40,14 +40,14 @@ public class AudioUploadRunnable implements Runnable{
         } catch (Exception e) {
             Logger.e(LOG_TAG, e.toString());
             Logger.exception(LOG_TAG, e);
-            UploadManager.errorWithUpload(recordingKey, "Error when setting variables to upload.");
+            UploadManager.errorWithAudioUpload(recordingKey, "Error when setting variables to upload.");
             return;
         }
 
         file = new File(filePath);
         if (!file.exists()){
             Logger.e(LOG_TAG, "File is not found.");
-            UploadManager.errorWithUpload(recordingKey, "Recording file not found.");
+            UploadManager.errorWithAudioUpload(recordingKey, "Recording file not found.");
             return;
         }
 
@@ -107,16 +107,16 @@ public class AudioUploadRunnable implements Runnable{
             } catch (IOException e) {
                 Logger.d(LOG_TAG, e.toString());
                 Logger.exception(LOG_TAG, e);
-                UploadManager.errorWithUpload(recordingKey, "Error with getting response from server");
+                UploadManager.errorWithAudioUpload(recordingKey, "Error with getting response from server");
                 return;
             }
         } catch (IOException e) {
             Logger.e(LOG_TAG, "Error with uploading data.");
             Logger.exception(LOG_TAG, e);
-            UploadManager.errorWithUpload(recordingKey, "Error with uploading data");
+            UploadManager.errorWithAudioUpload(recordingKey, "Error with uploading data");
             return;
         }
-        UploadManager.finishedUpload(responseCode, response, recordingKey);
+        UploadManager.finishedAudioUpload(responseCode, response, recordingKey);
     }
 
     public void setUrl(URL url) {

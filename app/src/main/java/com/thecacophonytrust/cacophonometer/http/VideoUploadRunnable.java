@@ -40,14 +40,14 @@ public class VideoUploadRunnable implements Runnable {
         } catch (Exception e) {
             Logger.e(LOG_TAG, e.toString());
             Logger.exception(LOG_TAG, e);
-            UploadManager.errorWithUpload(recordingKey, "Error when setting variables to upload.");
+            UploadManager.errorWithVideoUpload(recordingKey, "Error when setting variables to upload.");
             return;
         }
 
         file = new File(filePath);
         if (!file.exists()){
             Logger.e(LOG_TAG, "File is not found.");
-            UploadManager.errorWithUpload(recordingKey, "Recording file not found.");
+            UploadManager.errorWithVideoUpload(recordingKey, "Recording file not found.");
             return;
         }
 
@@ -107,16 +107,16 @@ public class VideoUploadRunnable implements Runnable {
             } catch (IOException e) {
                 Logger.d(LOG_TAG, e.toString());
                 Logger.exception(LOG_TAG, e);
-                UploadManager.errorWithUpload(recordingKey, "Error with getting response from server");
+                UploadManager.errorWithVideoUpload(recordingKey, "Error with getting response from server");
                 return;
             }
         } catch (IOException e) {
             Logger.e(LOG_TAG, "Error with uploading data.");
             Logger.exception(LOG_TAG, e);
-            UploadManager.errorWithUpload(recordingKey, "Error with uploading data");
+            UploadManager.errorWithVideoUpload(recordingKey, "Error with uploading data");
             return;
         }
-        UploadManager.finishedUpload(responseCode, response, recordingKey);
+        UploadManager.finishedVideoUpload(responseCode, response, recordingKey);
     }
 
     public void setUrl(URL url) {

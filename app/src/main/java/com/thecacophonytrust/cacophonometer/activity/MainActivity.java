@@ -227,34 +227,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testCode(View v) {
-
-        Logger.i(LOG_TAG, "Starting test code");
-        Camera camera = null;
-        try {
-            camera = Camera.open(1);
-            File file = new File(Settings.getRecordingsFolder(), "test2.mp4");
-            MediaRecorder recorder = new MediaRecorder();
-            recorder.setCamera(camera);
-            recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-            recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
-
-            CamcorderProfile cpHigh = CamcorderProfile
-                    .get(CamcorderProfile.QUALITY_HIGH);
-            recorder.setProfile(cpHigh);
-            recorder.setOutputFile(file.getAbsolutePath());
-            recorder.setMaxDuration(50000); // 50 seconds
-            recorder.setMaxFileSize(5000000);
-            recorder.prepare();
-            recorder.start();
-            Thread.sleep(10000);
-            recorder.stop();
-
-
-        } catch (Exception e) {
-            Logger.exception(LOG_TAG, e);
-
-        }
-
     }
 
     public static Context getContext(){
