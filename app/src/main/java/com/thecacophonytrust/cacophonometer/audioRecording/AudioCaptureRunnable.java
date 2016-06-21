@@ -28,8 +28,8 @@ public class AudioCaptureRunnable implements Runnable{
 
     private static final String LOG_TAG = "AudioCaptureRunnab.java";
 
-    private static DateFormat iso8601 = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.UK); //This format is used as it has it's characters are all file friendlily (not including -:+....)
-
+    private static DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
+    private static DateFormat fileFormat = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.UK);
     private AudioRules.DataObject rule = null;
     private MediaRecorder mRecorder = null;
     private boolean finished = false;
@@ -43,7 +43,7 @@ public class AudioCaptureRunnable implements Runnable{
         finished = false;
 
         Date date = new Date(System.currentTimeMillis());
-        String fileName = iso8601.format(date)+".3gp";
+        String fileName = fileFormat.format(date)+".3gp";
         File file = new File(Settings.getRecordingsFolder(), fileName);
         String filePath = file.getAbsolutePath();
 
@@ -55,6 +55,7 @@ public class AudioCaptureRunnable implements Runnable{
         try {
             mRecorder = new MediaRecorder();
             prepareMediaRecorder(filePath);
+
             mRecorder.start();
             Thread.sleep(sleepTime);
             mRecorder.stop();
@@ -63,6 +64,7 @@ public class AudioCaptureRunnable implements Runnable{
 
             audioFile.put("localFilePath", filePath);
             audioFile.put("duration", rule.getDuration());
+            audioFile.put("startTimestamp", iso8601.format(date));
             audioRecording.put("audioFileKey", AudioFile.addAndSave(audioFile));
             audioRecording.put("locationKey", Location.getMostRecentKey());
             audioRecording.put("hardwareKey", Hardware.getCurrentKey());
