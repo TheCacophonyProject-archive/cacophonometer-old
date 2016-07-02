@@ -28,7 +28,7 @@ public class AudioCaptureRunnable implements Runnable{
 
     private static final String LOG_TAG = "AudioCaptureRunnab.java";
 
-    private static DateFormat dateFormatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+    private static DateFormat dateFormatDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
     private static DateFormat dateFormatTime = new SimpleDateFormat("HH:mm:ss", Locale.UK);
     private static DateFormat fileFormat = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.UK);
     private AudioRules.DataObject rule = null;
@@ -66,7 +66,7 @@ public class AudioCaptureRunnable implements Runnable{
             audioFile.put("localFilePath", filePath);
             audioFile.put("duration", rule.getDuration());
             audioFile.put("startTimestamp", dateFormatTime.format(date));
-            audioFile.put("recordingDate", dateFormatDate.format(date));
+            audioFile.put("recordingDateTime", dateFormatDateTime.format(date));
             audioRecording.put("audioFileKey", AudioFile.addAndSave(audioFile));
             audioRecording.put("locationKey", Location.getMostRecentKey());
             audioRecording.put("hardwareKey", Hardware.getCurrentKey());
