@@ -75,7 +75,7 @@ public class AudioUploadRunnable implements Runnable{
             request.writeBytes(value + LINE_END);
 
             request.writeBytes(TWO_HYPHENS + boundary + LINE_END);
-            request.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\"audioFile\"" + LINE_END); //TODO change file name etc...
+            request.writeBytes("Content-Disposition: form-data; name=\"file\";filename=\""+file.getName()+"\"" + LINE_END); //TODO change file name etc...
             request.writeBytes(LINE_END);
             FileInputStream fileInputStream = new FileInputStream(file);
             int bytesRead, bytesAvailable, bufferSize;
