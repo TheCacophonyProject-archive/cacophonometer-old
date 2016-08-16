@@ -71,8 +71,8 @@ public class UploadManager {
      */
     private static void startNewUpload(){
         int audioRecordingKey = AudioRecording.getAudioRecordingToUpload();
-        int videoRecordingKey = VideoRecording.getVideoRecordingToUpload();
-        if (audioRecordingKey == 0 && videoRecordingKey == 0){
+        //int videoRecordingKey = VideoRecording.getVideoRecordingToUpload();
+        if (audioRecordingKey == 0){
             Logger.i(LOG_TAG, "No recording found to upload");
             return;
         }
@@ -85,20 +85,6 @@ public class UploadManager {
                 audioUploadRunnable.setUrl(url);
                 audioUploadRunnable.setAudioRecordingKey(audioRecordingKey);
                 threadExecutor.execute(audioUploadRunnable);
-            } catch (MalformedURLException e) {
-                Logger.e(LOG_TAG, "Error with generating upload URL: " + urlString);
-                Logger.exception(LOG_TAG, e);
-            }
-        }
-        if (videoRecordingKey != 0) {
-            VideoUploadRunnable videoUploadRunnable = new VideoUploadRunnable();
-            String urlString = null;
-            try {
-                urlString = Settings.getServerUrl() + VideoRecording.API_URL;
-                URL url = new URL(urlString);
-                videoUploadRunnable.setUrl(url);
-                videoUploadRunnable.setVideoRecordingKey(videoRecordingKey);
-                threadExecutor.execute(videoUploadRunnable);
             } catch (MalformedURLException e) {
                 Logger.e(LOG_TAG, "Error with generating upload URL: " + urlString);
                 Logger.exception(LOG_TAG, e);

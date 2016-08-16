@@ -19,6 +19,13 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+/**
+ * This class was used to create video rules. But is no longer used/maintained.
+ * We use to have an Arduino that had a PIR connected to it (motion sensor) and when the PIR detect
+ * motion the Arduino would connect to the Android phone telling it to start recording a video.
+ * This class is no longer used as we are using a Raspberry Pi for video recording and other
+ * experimental ideas.
+ */
 public class NewVideoRuleActivity extends AppCompatActivity {
 
     final static private String LOG_TAG = "NewVideoRuleActivity.java";

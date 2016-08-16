@@ -16,6 +16,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * This class was used to upload video recordings. But is no longer used/maintained.
+ * We use to have an Arduino that had a PIR connected to it (motion sensor) and when the PIR detect
+ * motion the Arduino would connect to the Android phone telling it to start recording a video.
+ * This class is no longer used as we are using a Raspberry Pi for video recording and other
+ * experimental ideas.
+ */
 public class VideoUploadRunnable implements Runnable {
     private static final String LOG_TAG = "VideoUploadRunnable.java";
     private static final String LINE_END = "\r\n";

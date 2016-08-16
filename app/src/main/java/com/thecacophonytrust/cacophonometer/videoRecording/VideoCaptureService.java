@@ -10,6 +10,13 @@ import com.thecacophonytrust.cacophonometer.activity.MainActivity;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.ThreadExecutor;
 
+/**
+ * This class was used to record video. But is no longer used/maintained.
+ * We use to have an Arduino that had a PIR connected to it (motion sensor) and when the PIR detect
+ * motion the Arduino would connect to the Android phone telling it to start recording a video.
+ * This class is no longer used as we are using a Raspberry Pi for video recording and other
+ * experimental ideas.
+ */
 public class VideoCaptureService extends IntentService {
     private static final String LOG_TAG = "VideoCaptureServic.java";
 

@@ -142,19 +142,6 @@ public class MainActivity extends AppCompatActivity {
             audioInfoTextView.setText(String.format("Next audio recording at %02d:%02d for rule '%s'", hour, minute, name));
         }
 
-        int nextVideoRuleKey = VideoRules.getNextRuleKey();
-        TextView videoInfoTextView = (TextView) findViewById(R.id.next_video_recording_text);
-
-        if (nextVideoRuleKey == 0){
-            videoInfoTextView.setText("No rule found for next video recording");
-        } else {
-            //TODO
-            int hour = VideoRules.getRuleDO(nextVideoRuleKey).nextVideoCaptureTime().get(Calendar.HOUR_OF_DAY);
-            int minute = VideoRules.getRuleDO(nextVideoRuleKey).nextVideoCaptureTime().get(Calendar.MINUTE);
-            String name = VideoRules.getRuleDO(nextVideoRuleKey).name;
-            videoInfoTextView.setText(String.format("Next video recording at %02d:%02d for rule '%s'", hour, minute, name));
-        }
-
     }
 
     /**
@@ -209,9 +196,9 @@ public class MainActivity extends AppCompatActivity {
         Hardware.loadFromFile();
         Software.loadFromFile();
         AudioRules.loadFromFile();
-        VideoRules.loadFromFile();
+        //VideoRules.loadFromFile();
         AudioCaptureManager.init(getApplicationContext());
-        VideoCaptureManager.init(getApplicationContext());
+        //VideoCaptureManager.init(getApplicationContext());
         GPS.init(getApplicationContext());
         GPS gps = new GPS();
         gps.update(null);
