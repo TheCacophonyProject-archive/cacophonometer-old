@@ -80,7 +80,7 @@ public class AudioRecording {
         //TODO parse response
         if (uploadingMap.containsKey(key)) {
             uploadingMap.remove(key);
-            audioRecordingMap.remove(key);
+            delete(key);
         } else {
             Logger.e(LOG_TAG, "A AudioRecording was said to be finished uploading when it wasn't in the uploading Map");
         }
@@ -129,5 +129,23 @@ public class AudioRecording {
             Logger.e(LOG_TAG, e.toString());
         }
         return apiJson;
+    }
+
+    /**
+     * Will delete Audio recording, json and file, from the device.
+     * @param key
+     */
+    public static void delete(int key) {
+        try {
+            int audioFileKey =  audioRecordingMap.get(key).getInt("audioFileKey");
+            AudioFile.delete(audioFileKey);
+        } catch (JSONException e) {
+            Logger.exception(LOG_TAG, e);
+        }
+        File jsonFolder = new File(Settings.getHomeFile(), folderName);
+        File jsonFile = new File(jsonFolder, key + ".json");
+        jsonFile.delete();
+        audioRecordingMap.remove(key);
+
     }
 }

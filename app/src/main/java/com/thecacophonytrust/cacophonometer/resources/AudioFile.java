@@ -94,4 +94,22 @@ public class AudioFile {
         audioFile.remove("localFilePath");
         return audioFile;
     }
+
+
+    /**
+     * Will delete Audio File from the device.
+     * @param key
+     */
+    public static void delete(int key) {
+        File folder = new File(Settings.getHomeFile(), folderName);
+        File file = new File(folder, key + ".json");
+        try {
+            String filePath = audioFileMap.get(key).getString("localFilePath");
+            File f = new File(filePath);
+            f.delete();
+        } catch (JSONException e) {
+            Logger.exception(LOG_TAG, e);
+        }
+        file.delete();
+    }
 }
