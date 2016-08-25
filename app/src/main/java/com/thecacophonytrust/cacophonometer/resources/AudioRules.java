@@ -1,6 +1,7 @@
 package com.thecacophonytrust.cacophonometer.resources;
 
 import com.thecacophonytrust.cacophonometer.Settings;
+import com.thecacophonytrust.cacophonometer.enums.RuleRepeatType;
 import com.thecacophonytrust.cacophonometer.util.JsonFile;
 import com.thecacophonytrust.cacophonometer.util.LoadData;
 import com.thecacophonytrust.cacophonometer.util.Logger;
@@ -118,6 +119,8 @@ public class AudioRules {
         private Calendar startTime = null;
         public int hour = -1;
         public int minute = -1;
+        public RuleRepeatType repeatType = null;
+
 
         public DataObject(JSONObject ruleJO) {
             try{
@@ -127,6 +130,13 @@ public class AudioRules {
                 String[] timeArgs = ruleJO.getString("startTimestamp").split(":");
                 hour = Integer.valueOf(timeArgs[0]);
                 minute = Integer.valueOf(timeArgs[1]);
+                String repeatTypeString = (String) ruleJO.get("repeat");
+                if (repeatTypeString.equals("hourly"))
+                    repeatType = RuleRepeatType.HOURLY;
+                else if (repeatTypeString.equals("daily"))
+                    repeatType = RuleRepeatType.DAILY;
+                else
+                    repeatType = RuleRepeatType.DAILY;
                 assert (0 <= hour && hour <= 23);
                 assert (0 <= minute && minute <= 59);
                 Logger.d(LOG_TAG, "Time args:" + timeArgs[0] + ":" + timeArgs[1]);
@@ -140,11 +150,23 @@ public class AudioRules {
 
         public Calendar nextAlarmTime() {
             Calendar now = Calendar.getInstance();
-            while (startTime.before(now)) {
-                startTime.add(Calendar.DATE, 1);
-                startTime.set(Calendar.HOUR_OF_DAY, hour);
-                startTime.set(Calendar.MINUTE, minute);
+            switch (repeatType) {
+                case DAILY:
+                    while (startTime.before(now)) {
+                        startTime.add(Calendar.DATE, 1);
+                        startTime.set(Calendar.HOUR_OF_DAY, hour);
+                        startTime.set(Calendar.MINUTE, minute);
+                    }
+                    break;
+                case HOURLY:
+                    while (startTime.before(now)) {
+                        startTime.add(Calendar.HOUR, 1);
+                        startTime.set(Calendar.HOUR_OF_DAY, hour);
+                        startTime.set(Calendar.MINUTE, minute);
+                    }
+                    break;
             }
+
             return startTime;
         }
 

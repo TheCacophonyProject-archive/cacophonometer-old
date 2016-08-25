@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -73,6 +74,8 @@ public class NewAudioRuleActivity extends AppCompatActivity {
 	public void saveRule(View view){
 		EditText duration = (EditText) findViewById(R.id.length_input);
 		EditText name = (EditText) findViewById(R.id.edit_rule_name);
+		Boolean hourly = ((RadioButton) findViewById(R.id.repeat_hourly)).isChecked();
+		Boolean daily = ((RadioButton) findViewById(R.id.repeat_daily)).isChecked();
 
 		if (name.getText().toString().equals("")){
 			Toast.makeText(getApplicationContext(), "Enter name for the rule", Toast.LENGTH_SHORT).show();
@@ -84,6 +87,10 @@ public class NewAudioRuleActivity extends AppCompatActivity {
 				rule.put("name", name.getText().toString());
 				rule.put("startTimestamp", hour+":"+minute);
 				rule.put("duration", Integer.parseInt(duration.getText().toString()));
+				if (hourly)
+					rule.put("repeat", "hourly");
+				else
+					rule.put("repeat", "daily");
 				AudioRules.addAndSave(rule);
 				super.onBackPressed();
 			} catch (Exception e) {

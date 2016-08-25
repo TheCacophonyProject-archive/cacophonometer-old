@@ -86,6 +86,34 @@
                 android:text="6">
             </EditText>
 
+            <TextView
+                android:id="@+id/repeat_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Repeat every"
+                android:textSize="20sp"
+                style="?android:attr/listSeparatorTextViewStyle"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Day"
+                    android:id="@+id/repeat_daily"
+                    android:checked="true"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hour"
+                    android:id="@+id/repeat_hourly" />
+
+            </RadioGroup>
+
+
         </LinearLayout>
 
     </ScrollView>
