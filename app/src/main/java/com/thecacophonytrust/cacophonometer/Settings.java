@@ -28,7 +28,7 @@ public class Settings {
 	private static File rulesFolder = null;
 	private static int deviceId = 0;
 
-	private static final String DEFAULT_URL = "http://192.168.0.15:8888";
+	private static final String DEFAULT_URL = "http://52.64.67.145:8888/";
 	private static final String DEFAULT_UPLOAD_PARAM = "/upload";
 	private static final String DEFAULT_TEMP_FOLDER = "temp";
 	private static final String DEFAULT_RULES_FOLDER = "rules";
