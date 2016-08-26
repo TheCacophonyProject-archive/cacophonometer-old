@@ -119,7 +119,7 @@ public class AudioRules {
         private Calendar startTime = null;
         public int hour = -1;
         public int minute = -1;
-        public RuleRepeatType repeatType = null;
+        public RuleRepeatType repeatType = RuleRepeatType.DAILY;
 
 
         public DataObject(JSONObject ruleJO) {
@@ -130,11 +130,13 @@ public class AudioRules {
                 String[] timeArgs = ruleJO.getString("startTimestamp").split(":");
                 hour = Integer.valueOf(timeArgs[0]);
                 minute = Integer.valueOf(timeArgs[1]);
-                String repeatTypeString = (String) ruleJO.get("repeat");
-                if (repeatTypeString.equals("hourly"))
-                    repeatType = RuleRepeatType.HOURLY;
-                else if (repeatTypeString.equals("daily"))
-                    repeatType = RuleRepeatType.DAILY;
+                if (ruleJO.has("repeat")) {
+                    String repeatTypeString = (String) ruleJO.get("repeat");
+                    if (repeatTypeString.equals("hourly"))
+                        repeatType = RuleRepeatType.HOURLY;
+                    else
+                        repeatType = RuleRepeatType.DAILY;
+                }
                 else
                     repeatType = RuleRepeatType.DAILY;
                 assert (0 <= hour && hour <= 23);
@@ -161,7 +163,6 @@ public class AudioRules {
                 case HOURLY:
                     while (startTime.before(now)) {
                         startTime.add(Calendar.HOUR, 1);
-                        startTime.set(Calendar.HOUR_OF_DAY, hour);
                         startTime.set(Calendar.MINUTE, minute);
                     }
                     break;
