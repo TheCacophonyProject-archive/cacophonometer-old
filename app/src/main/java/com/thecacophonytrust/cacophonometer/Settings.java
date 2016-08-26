@@ -36,6 +36,8 @@ public class Settings {
 	private static final String DEFAULT_VIDEO_RECORDINGS_FOLDER = "videoRecordings";
 	private static final String DEFAULT_SETTINGS_JSON_FILE = "settings.json";
 
+	public static final String PREFS_NAME = "CacophonyPrefs";
+
 	public static File getSettingsFile(){
 		if (settingsFile == null){
 			settingsFile = new File(getHomeFile(), DEFAULT_SETTINGS_JSON_FILE);

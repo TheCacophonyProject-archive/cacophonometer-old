@@ -6,6 +6,7 @@ import com.thecacophonytrust.cacophonometer.util.JsonFile;
 import com.thecacophonytrust.cacophonometer.util.LoadData;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -112,6 +113,24 @@ public class AudioRules {
         return ruleDOMap.get(key);
     }
 
+    /**
+     * Adds a the default rules, currently just one rule for 3 minutes that
+     * repeats every hour.
+     */
+    public static void addDefaultRules() {
+        Logger.i(LOG_TAG, "Adding default rules.");
+        JSONObject rule1JO = new JSONObject();
+        try {
+            rule1JO.put("name", "Default_Rule");
+            rule1JO.put("duration", 180);
+            rule1JO.put("startTimestamp", "00:00");
+            rule1JO.put("repeat", "hourly");
+        } catch (JSONException e) {
+            Logger.exception(LOG_TAG, e);
+        }
+        addAndSave(rule1JO);
+    }
+
     public static class DataObject {
         private static final String LOG_TAG = "RuleDataObject.java";
         public String name = null;
@@ -126,7 +145,6 @@ public class AudioRules {
             try{
                 name = ((String) ruleJO.get("name"));
                 duration = ((Integer) ruleJO.get("duration"));
-                startTime = Calendar.getInstance();
                 String[] timeArgs = ruleJO.getString("startTimestamp").split(":");
                 hour = Integer.valueOf(timeArgs[0]);
                 minute = Integer.valueOf(timeArgs[1]);
@@ -142,8 +160,6 @@ public class AudioRules {
                 assert (0 <= hour && hour <= 23);
                 assert (0 <= minute && minute <= 59);
                 Logger.d(LOG_TAG, "Time args:" + timeArgs[0] + ":" + timeArgs[1]);
-                startTime.set(Calendar.HOUR_OF_DAY, hour);
-                startTime.set(Calendar.MINUTE, minute);
             } catch (Exception e){
                 Logger.e(LOG_TAG, "Error when making new rule from JSON file.");
                 Logger.exception(LOG_TAG, e);
@@ -154,6 +170,9 @@ public class AudioRules {
             Calendar now = Calendar.getInstance();
             switch (repeatType) {
                 case DAILY:
+                    startTime = Calendar.getInstance();
+                    startTime.set(Calendar.HOUR_OF_DAY, hour);
+                    startTime.set(Calendar.MINUTE, minute);
                     while (startTime.before(now)) {
                         startTime.add(Calendar.DATE, 1);
                         startTime.set(Calendar.HOUR_OF_DAY, hour);
@@ -161,6 +180,9 @@ public class AudioRules {
                     }
                     break;
                 case HOURLY:
+                    startTime = Calendar.getInstance();
+                    startTime.set(Calendar.HOUR_OF_DAY, 0);
+                    startTime.set(Calendar.MINUTE, minute);
                     while (startTime.before(now)) {
                         startTime.add(Calendar.HOUR, 1);
                         startTime.set(Calendar.MINUTE, minute);

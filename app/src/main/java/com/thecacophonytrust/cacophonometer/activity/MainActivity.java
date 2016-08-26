@@ -3,6 +3,7 @@ package com.thecacophonytrust.cacophonometer.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -190,6 +191,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void init() {
         Logger.i(LOG_TAG, "Initializing Cacophonometer.");
+        SharedPreferences prefs = getSharedPreferences(Settings.PREFS_NAME, 0);
+        if (prefs.getBoolean("first_time", true)) {
+            AudioRules.addDefaultRules();
+            prefs.edit().putBoolean(Settings.PREFS_NAME, false);
+        }
+
         context = getApplicationContext();
         Settings.setFromJSON(JsonFile.getJSON(Settings.getSettingsFile().getAbsolutePath()));
         Location.loadFromFile();
