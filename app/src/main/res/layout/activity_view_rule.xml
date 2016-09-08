@@ -22,7 +22,7 @@
         android:layout_alignLeft="@+id/view_rule_rule_name"
         android:layout_below="@+id/view_rule_rule_name"
         android:layout_marginTop="10dp"
-        android:text="Last resording time:" />
+        android:text="Last recording time:" />
 
     <TextView
         android:id="@+id/view_rule_recording_time"

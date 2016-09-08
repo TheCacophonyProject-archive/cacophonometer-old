@@ -57,8 +57,17 @@ public class ViewAudioRuleActivity extends AppCompatActivity {
 		TextView ruleNameTextView = (TextView) findViewById(R.id.view_rule_rule_name);
 		TextView recordingTimeTextView = (TextView) findViewById(R.id.view_rule_recording_time);
 		TextView recordingLengthTextView = (TextView) findViewById(R.id.view_rule_recording_length);
-		ruleNameTextView.setText("Name: " + rule.toString());
-		recordingTimeTextView.setText("Recording time: " + "Insert time here...");
+		//ruleNameTextView.setText("Name: " + rule.toString());
+		ruleNameTextView.setText("Name: " + rule.getName());
+		//recordingTimeTextView.setText("Recording time: " + "Insert time here...");
+        int ruleMinute = rule.minute;
+        String ruleMinuteStr;
+        if (ruleMinute < 10){
+            ruleMinuteStr = "0" + ruleMinute;
+        }else {
+            ruleMinuteStr = String.valueOf(ruleMinute);
+        }
+		recordingTimeTextView.setText("Recording time: " + rule.hour + ":" + ruleMinuteStr);
 		recordingLengthTextView.setText("Recording duration: " + rule.getDuration());
 	}
 
