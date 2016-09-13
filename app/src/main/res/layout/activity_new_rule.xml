@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:inputType="number"
-                android:text="6">
+                android:text="60">
             </EditText>
 
             <TextView
