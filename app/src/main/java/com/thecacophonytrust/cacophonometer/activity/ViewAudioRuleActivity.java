@@ -3,6 +3,7 @@ package com.thecacophonytrust.cacophonometer.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +11,12 @@ import android.widget.TextView;
 
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.audioRecording.AudioCaptureManager;
+import com.thecacophonytrust.cacophonometer.enums.RuleRepeatType;
 import com.thecacophonytrust.cacophonometer.resources.AudioRules;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class ViewAudioRuleActivity extends AppCompatActivity {
 
@@ -57,6 +63,8 @@ public class ViewAudioRuleActivity extends AppCompatActivity {
 		TextView ruleNameTextView = (TextView) findViewById(R.id.view_rule_rule_name);
 		TextView recordingTimeTextView = (TextView) findViewById(R.id.view_rule_recording_time);
 		TextView recordingLengthTextView = (TextView) findViewById(R.id.view_rule_recording_length);
+		TextView lastRecordingTime = (TextView) findViewById(R.id.view_rule_last_recording_time);
+
 		//ruleNameTextView.setText("Name: " + rule.toString());
 		ruleNameTextView.setText("Name: " + rule.getName());
 		//recordingTimeTextView.setText("Recording time: " + "Insert time here...");
@@ -67,8 +75,23 @@ public class ViewAudioRuleActivity extends AppCompatActivity {
         }else {
             ruleMinuteStr = String.valueOf(ruleMinute);
         }
-		recordingTimeTextView.setText("Recording time: " + rule.hour + ":" + ruleMinuteStr);
+	//	recordingTimeTextView.setText("Recording time: " + rule.hour + ":" + ruleMinuteStr);
 		recordingLengthTextView.setText("Recording duration: " + rule.getDuration());
+		if (rule.lastRecordingTime == null) {   // Checks if there is a time for the last recording
+			lastRecordingTime.setText("Last recording time: No recordings for this rule have been made since the phone was last turned on.");
+		} else {
+			DateFormat dateFormatDateTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.UK);
+			String timeAsString = dateFormatDateTime.format(rule.lastRecordingTime);
+			lastRecordingTime.setText("Last recording time: "+ timeAsString);
+		}
+
+		if (rule.repeatType == RuleRepeatType.DAILY){
+			recordingTimeTextView.setText("This recording will repeat every day at " + rule.hour + ":" + ruleMinuteStr);
+
+		}else if(rule.repeatType == RuleRepeatType.HOURLY){
+
+			recordingTimeTextView.setText("This rule repeats hourly on the " + ruleMinuteStr + " minute of each hour");
+		}
 	}
 
 	/**

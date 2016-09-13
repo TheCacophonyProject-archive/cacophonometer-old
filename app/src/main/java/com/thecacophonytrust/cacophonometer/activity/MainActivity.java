@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.hardware.Camera;
-import android.media.CamcorderProfile;
-import android.media.MediaRecorder;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,15 +19,12 @@ import com.thecacophonytrust.cacophonometer.resources.AudioRules;
 import com.thecacophonytrust.cacophonometer.resources.Hardware;
 import com.thecacophonytrust.cacophonometer.resources.Location;
 import com.thecacophonytrust.cacophonometer.resources.Software;
-import com.thecacophonytrust.cacophonometer.resources.VideoRules;
 import com.thecacophonytrust.cacophonometer.util.GPS;
 import com.thecacophonytrust.cacophonometer.R;
 import com.thecacophonytrust.cacophonometer.util.JsonFile;
 import com.thecacophonytrust.cacophonometer.util.Logger;
 import com.thecacophonytrust.cacophonometer.util.Update;
-import com.thecacophonytrust.cacophonometer.videoRecording.VideoCaptureManager;
 
-import java.io.File;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             openSettings();
+            return true;
+        }else if(id == R.id.action_about){
+            openAbout();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -104,26 +101,26 @@ public class MainActivity extends AppCompatActivity {
         }
         Toast.makeText(getApplicationContext(), audioText, Toast.LENGTH_SHORT).show();
 
-        String videoText;
-        if (VideoCaptureManager.isRecording())
-            videoText = "Device is video recording now.";
-        else if (VideoRules.getNextRuleKey() == 0)
-            videoText = "No video rules found for recording";
-        else {
-            //TODO this could be done better... but works for now.
-            Calendar timeOfRecording = VideoCaptureManager.getStartTime();
-
-            if (timeOfRecording != null) {
-                long timeToNextRecording = (timeOfRecording.getTimeInMillis() - System.currentTimeMillis())/1000;
-                int hours = (int) (timeToNextRecording / 3600);
-                int minutes = (int) (timeToNextRecording % 3600) / 60;
-                int seconds = (int) timeToNextRecording % 60;
-                videoText = String.format("Next video recording starts in %02d:%02d:%02d.", hours, minutes, seconds);
-            } else {
-                videoText = "No rules found for video recording.";
-            }
-        }
-        Toast.makeText(getApplicationContext(), videoText, Toast.LENGTH_SHORT).show();
+//        String videoText;
+//        if (VideoCaptureManager.isRecording())
+//            videoText = "Device is video recording now.";
+//        else if (VideoRules.getNextRuleKey() == 0)
+//            videoText = "No video rules found for recording";
+//        else {
+//            //TODO this could be done better... but works for now.
+//            Calendar timeOfRecording = VideoCaptureManager.getStartTime();
+//
+//            if (timeOfRecording != null) {
+//                long timeToNextRecording = (timeOfRecording.getTimeInMillis() - System.currentTimeMillis())/1000;
+//                int hours = (int) (timeToNextRecording / 3600);
+//                int minutes = (int) (timeToNextRecording % 3600) / 60;
+//                int seconds = (int) timeToNextRecording % 60;
+//                videoText = String.format("Next video recording starts in %02d:%02d:%02d.", hours, minutes, seconds);
+//            } else {
+//                videoText = "No rules found for video recording.";
+//            }
+//        }
+//        Toast.makeText(getApplicationContext(), videoText, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -150,6 +147,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void openAbout() {
+        Intent intent = new Intent(this, About2Activity.class);
         startActivity(intent);
     }
 

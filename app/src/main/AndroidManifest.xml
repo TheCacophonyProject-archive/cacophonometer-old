@@ -1,80 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.thecacophonytrust.cacophonometer"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.thecacophonytrust.cacophonometer">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.USB_PERMISSION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
 
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
-    <uses-feature android:name="android.hardware.usb.accessory"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.usb.accessory" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <service android:name=".audioRecording.AudioCaptureService"/>
-        <service android:name=".videoRecording.VideoCaptureService"/>
+        <service android:name=".audioRecording.AudioCaptureService" />
+        <service android:name=".videoRecording.VideoCaptureService" />
 
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="Settings">
-        </activity>
+            android:label="Settings" />
         <activity
             android:name=".activity.AudioRulesMenuActivity"
-            android:label="Rules">
-        </activity>
+            android:label="Rules" />
         <activity
             android:name=".activity.NewAudioRuleActivity"
-            android:label="New Rule">
-        </activity>
+            android:label="New Rule" />
         <activity
             android:name=".activity.ViewAudioRuleActivity"
-            android:label="View Rule">
-        </activity>
+            android:label="View Rule" />
         <activity
             android:name=".activity.VideoRulesMenuActivity"
-            android:label="Video Rules">
-        </activity>
+            android:label="Video Rules" />
         <activity
             android:name=".activity.NewVideoRuleActivity"
-            android:label="New Video Rule">
-        </activity>
+            android:label="New Video Rule" />
         <activity
             android:name=".activity.ViewVideoRuleActivity"
-            android:label="Video Rule">
-        </activity>
+            android:label="Video Rule" />
         <activity
             android:name=".activity.CameraPreviewActivity"
-            android:label="Camera preview">
-        </activity>
+            android:label="Camera preview" />
         <activity
             android:name=".activity.AccessoryActivity"
             android:label="Accessory Control Activity.">
             <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"/>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
-                android:resource="@xml/accessory_filter"/>
+                android:resource="@xml/accessory_filter" />
         </activity>
+
+        <activity
+            android:name=".activity.About2Activity"
+            android:label="About" />
+
+
     </application>
 
 </manifest>

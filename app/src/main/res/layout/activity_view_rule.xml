@@ -40,8 +40,10 @@
         android:layout_alignLeft="@+id/view_rule_recording_time"
         android:layout_below="@+id/view_rule_recording_time"
         android:layout_marginTop="10dp"
-        android:text="Recording duration: " />
-    
+        android:text="Recording duration (seconds): " />
+
+
+
     <ListView
         android:id="@+id/view_rule_recording_list"
         android:layout_weight="30"

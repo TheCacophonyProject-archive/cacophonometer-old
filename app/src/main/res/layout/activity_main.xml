@@ -6,7 +6,14 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:orientation="vertical">
-    
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_gravity="right"
+        android:src="@drawable/cacophony" />
+
     <Button
         android:id="@+id/audio_rules_button"
         android:layout_width="wrap_content"

@@ -75,6 +75,7 @@ public class AudioCaptureRunnable implements Runnable{
             audioRecording.put("uploaded", false);
 
             AudioRecording.add(audioRecording);
+            rule.lastRecordingTime = date;           // Saves the last recording time to the audio rule data object.
         } catch (JSONException | InterruptedException | IOException e) {
             error = true;
             Logger.e(LOG_TAG, "Error with recording.");

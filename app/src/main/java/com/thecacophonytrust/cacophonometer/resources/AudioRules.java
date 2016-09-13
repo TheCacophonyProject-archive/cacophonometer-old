@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -139,6 +140,7 @@ public class AudioRules {
         public int hour = -1;
         public int minute = -1;
         public RuleRepeatType repeatType = RuleRepeatType.DAILY;
+        public Date lastRecordingTime = null;
 
 
         public DataObject(JSONObject ruleJO) {
