@@ -122,7 +122,7 @@ public class AudioRules {
         JSONObject rule1JO = new JSONObject();
         try {
             rule1JO.put("name", "Default_Rule");
-            rule1JO.put("duration", 180);
+            rule1JO.put("duration", 60);
             rule1JO.put("startTimestamp", "00:00");
             rule1JO.put("repeat", "hourly");
         } catch (JSONException e) {
