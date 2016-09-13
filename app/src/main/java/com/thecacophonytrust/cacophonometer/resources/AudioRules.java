@@ -173,19 +173,21 @@ public class AudioRules {
                     startTime = Calendar.getInstance();
                     startTime.set(Calendar.HOUR_OF_DAY, hour);
                     startTime.set(Calendar.MINUTE, minute);
+                    startTime.set(Calendar.SECOND, 0);
                     while (startTime.before(now)) {
                         startTime.add(Calendar.DATE, 1);
-                        startTime.set(Calendar.HOUR_OF_DAY, hour);
-                        startTime.set(Calendar.MINUTE, minute);
+                       // startTime.set(Calendar.HOUR_OF_DAY, hour);
+                      //  startTime.set(Calendar.MINUTE, minute);
                     }
                     break;
                 case HOURLY:
                     startTime = Calendar.getInstance();
                     startTime.set(Calendar.HOUR_OF_DAY, 0);
                     startTime.set(Calendar.MINUTE, minute);
+                    startTime.set(Calendar.SECOND, 0);
                     while (startTime.before(now)) {
                         startTime.add(Calendar.HOUR, 1);
-                        startTime.set(Calendar.MINUTE, minute);
+                      //  startTime.set(Calendar.MINUTE, minute);
                     }
                     break;
             }
