@@ -193,13 +193,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void init() {
         Logger.i(LOG_TAG, "Initializing Cacophonometer.");
+        context = getApplicationContext();
+        Settings.setContext(context);
         SharedPreferences prefs = getSharedPreferences(Settings.PREFS_NAME, 0);
         if (prefs.getBoolean("first_time", true)) {
             AudioRules.addDefaultRules();
             prefs.edit().putBoolean(Settings.PREFS_NAME, false);
         }
 
-        context = getApplicationContext();
+//        context = getApplicationContext();
+
         Settings.setFromJSON(JsonFile.getJSON(Settings.getSettingsFile().getAbsolutePath()));
         Location.loadFromFile();
         Hardware.loadFromFile();
