@@ -40,6 +40,7 @@ public class Settings {
 	public static final String PREFS_NAME = "CacophonyPrefs";
 
     private static Context context;
+    //
 
 	public static File getSettingsFile(){
 		if (settingsFile == null){
