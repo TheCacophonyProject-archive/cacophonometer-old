@@ -7,4 +7,5 @@ package com.thecacophonytrust.cacophonometer.activity;
 public class TimTest2 {
 
     int aNumber=0;
+    int aNumber2=3;
 }
