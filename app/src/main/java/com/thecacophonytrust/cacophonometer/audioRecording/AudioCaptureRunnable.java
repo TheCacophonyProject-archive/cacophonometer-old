@@ -1,7 +1,12 @@
 package com.thecacophonytrust.cacophonometer.audioRecording;
 
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.ToneGenerator;
 import android.os.Looper;
+import android.speech.tts.TextToSpeech;
 
 import com.thecacophonytrust.cacophonometer.Settings;
 import com.thecacophonytrust.cacophonometer.activity.MainActivity;
@@ -48,7 +53,7 @@ public class AudioCaptureRunnable implements Runnable{
         File file = new File(Settings.getRecordingsFolder(), fileName);
         String filePath = file.getAbsolutePath();
 
-        long sleepTime = rule.getDuration() * 1000;
+        long recordTime = rule.getDuration() * 1000;
         JSONObject audioRecording = new JSONObject();
         JSONObject audioFile = new JSONObject();
 
@@ -57,9 +62,51 @@ public class AudioCaptureRunnable implements Runnable{
             mRecorder = new MediaRecorder();
             prepareMediaRecorder(filePath);
 
+            // Give warning that recording is about to start
+            //http://stackoverflow.com/questions/6462105/how-do-i-access-androids-default-beep-sound
+
+            Context context = Settings.getContext();
+
+            AudioManager am =  (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+            am.setStreamVolume(
+                    AudioManager.STREAM_NOTIFICATION,
+                    am.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                    0);
+            final ToneGenerator tg2 = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+
+            // First beep before recording starts
+        for (int i=0; i<10; i++) {
+            tg2.startTone(ToneGenerator.TONE_DTMF_0, 100);
+            Thread.sleep(2000);
+        }
+            MediaPlayer mp = new MediaPlayer();
+
+            mp.setDataSource("/mnt/sdcard/yourdirectory/youraudiofile.mp3");
+            mp.prepare();
+            mp.start();
+
+
+            int totalTime = 0;
+            int beepTime = 50;
+            int oneLoopTime = 2000;
+            int recordingFinishedBeepTime = 5000;
             mRecorder.start();
-            Thread.sleep(sleepTime);
+           // now beep faster during recording
+            while (totalTime < recordTime){
+                tg2.startTone(ToneGenerator.TONE_DTMF_0, beepTime);
+                Thread.sleep(oneLoopTime);
+                totalTime = totalTime + oneLoopTime;
+            }
+
             mRecorder.stop();
+
+
+
+            tg2.startTone(ToneGenerator.TONE_DTMF_0, recordingFinishedBeepTime);
+//            Thread.sleep(2000);
+//
+//            tg2.stopTone();
 
 
 
