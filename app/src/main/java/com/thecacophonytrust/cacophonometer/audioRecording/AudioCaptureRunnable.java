@@ -108,18 +108,11 @@ public class AudioCaptureRunnable implements Runnable{
 //
 //            tg2.stopTone();
 
+            audioRecording.put("duration", rule.getDuration());
+            audioRecording.put("localFilePath", filePath);
+            audioRecording.put("recordingDateTime", dateFormatDateTime.format(date));
+            audioRecording.put("recordingTime", dateFormatTime.format(date));
 
-
-            audioFile.put("localFilePath", filePath);
-            audioFile.put("duration", rule.getDuration());
-            audioFile.put("startTimestamp", dateFormatTime.format(date));
-            audioFile.put("recordingDateTime", dateFormatDateTime.format(date));
-            audioRecording.put("audioFileKey", AudioFile.addAndSave(audioFile));
-            audioRecording.put("locationKey", Location.getMostRecentKey());
-            audioRecording.put("hardwareKey", Hardware.getCurrentKey());
-            audioRecording.put("softwareKey", Software.getCurrentKey());
-            audioRecording.put("batteryPercentage", MainActivity.getBatteryPercentage());
-            audioRecording.put("uploaded", false);
 
             AudioRecording.add(audioRecording);
             rule.lastRecordingTime = date;           // Saves the last recording time to the audio rule data object.

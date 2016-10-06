@@ -31,14 +31,8 @@ public class AudioUploadRunnable implements Runnable{
         String filePath;
         File file;
         try {
-            JSONObject audioRecording = AudioRecording.getFromKey(recordingKey);
-            assert audioRecording != null;
-            JSONObject audioFile = AudioFile.getFromKey(audioRecording.getInt("audioFileKey"));
-            assert audioFile != null;
-            Logger.d(LOG_TAG, audioFile.toString());
-            filePath = audioFile.getString("localFilePath");
+            filePath = data.getString("localFilePath");
         } catch (Exception e) {
-            Logger.e(LOG_TAG, e.toString());
             Logger.exception(LOG_TAG, e);
             UploadManager.errorWithAudioUpload(recordingKey, "Error when setting variables to upload.");
             return;

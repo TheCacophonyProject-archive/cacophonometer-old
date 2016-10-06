@@ -21,7 +21,7 @@ public class AudioRecording {
     private static Map<Integer, JSONObject> audioRecordingMap = new HashMap<>();
     private static Map<Integer, JSONObject> uploadingMap = new HashMap<>();
 
-    public static final String API_URL = "/api/v1/audioRecordings";
+    public static final String API_URL = "/api/v1/audiorecording";
 
     public static JSONObject getFromKey(int key) {
         if (audioRecordingMap.containsKey(key)) {
@@ -106,29 +106,7 @@ public class AudioRecording {
     }
 
     public static JSONObject convertForUpload(int key) {
-        JSONObject apiJson = new JSONObject();
-        JSONObject audioRecording = getFromKey(key);
-        try {
-            assert audioRecording != null;
-            JSONObject audioFile = AudioFile.convertForUpload(audioRecording.getInt("audioFileKey"));
-            assert audioFile != null;
-            JSONObject location = Location.convertForUpload(audioRecording.getInt("locationKey"));
-            assert location != null;
-            JSONObject software = Software.convertForUpload(audioRecording.getInt("softwareKey"));
-            assert software != null;
-            JSONObject hardware = Hardware.convertForUpload(audioRecording.getInt("hardwareKey"));
-            assert hardware != null;
-
-            apiJson.put("audioFile", audioFile);
-            apiJson.put("location", location);
-            apiJson.put("hardware", hardware);
-            apiJson.put("software", software);
-            apiJson.put("batteryPercentage", audioRecording.getDouble("batteryPercentage"));
-
-        } catch (Exception e) {
-            Logger.e(LOG_TAG, e.toString());
-        }
-        return apiJson;
+        return getFromKey(key);
     }
 
     /**
