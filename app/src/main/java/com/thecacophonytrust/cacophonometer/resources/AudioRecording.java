@@ -115,8 +115,9 @@ public class AudioRecording {
      */
     public static void delete(int key) {
         try {
-            int audioFileKey =  audioRecordingMap.get(key).getInt("audioFileKey");
-            AudioFile.delete(audioFileKey);
+            String filePath = audioRecordingMap.get(key).getString("localFilePath");
+            File f = new File(filePath);
+            f.delete();
         } catch (JSONException e) {
             Logger.exception(LOG_TAG, e);
         }
