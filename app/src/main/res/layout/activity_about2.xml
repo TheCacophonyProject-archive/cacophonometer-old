@@ -17,13 +17,15 @@
         android:layout_alignParentEnd="false"
         android:layout_alignParentStart="false"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentLeft="false">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Thank you for installing the Cacophonometer.  The application will automatically take audio recordings every hour and upload them to &apos;The Cacophony Project&apos; server.  This will allow us to monitor the birdsong near your device. If you press the &apos;AUDIO RULES&apos; button you will see the default rule that we have created.  You may also add more rules of your own that will allow you to record at the same time every day or every hour.  We think the best length of recording is 60 seconds but you can change this. You will be able to check that your recordings have been uploaded by visiting: http://52.64.67.145:8888/getAudioRecording Thank you again for supporting The Cacophony Project https://cacophony.org.nz/"
+            android:text="Thank you for installing the Cacophonometer.  The application will automatically take audio recordings every hour and upload them to &apos;The Cacophony Project&apos; server.  This will allow us to monitor the birdsong near your device. If you press the &apos;AUDIO RULES&apos; button you will see the default rule that we have created.  You may also add more rules of your own that will allow you to record at the same time every day or every hour.  We think the best length of recording is 60 seconds but you can change this. You will be able to check that your recordings have been uploaded by visiting: http://52.64.67.145:8888/get_audio_recordings Thank you again for supporting The Cacophony Project https://cacophony.org.nz/"
             android:id="@+id/textView2"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
