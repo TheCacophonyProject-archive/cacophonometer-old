@@ -10,12 +10,18 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
-        versionName "0.1"
+        versionName '0.11.1'
+
+    }
+    //http://stackoverflow.com/questions/4471025/how-can-you-get-the-manifest-version-number-from-the-apps-layout-xml-variable
+    applicationVariants.all { variant ->
+        variant.resValue "string", "versionName", variant.versionName
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
         }
     }
 }
